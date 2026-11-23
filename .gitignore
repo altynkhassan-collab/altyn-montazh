@@ -1,0 +1,4 @@
+.kreativ/
+__pycache__/
+*.tmp.mp4
+.DS_Store
