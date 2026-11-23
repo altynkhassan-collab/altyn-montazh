@@ -352,6 +352,38 @@ class G:
 
 ICONS = ["target", "bulb", "sad", "happy", "phone", "money", "clock"]
 
+
+def end_card(g, th, bg, E, te):
+    """Соңғы экран: тег, тақырып, ескі/жаңа баға, батырма, жебе. E['logo'] — логотип суреті (міндетті емес)"""
+    img = bg.copy(); d = g.Draw.Draw(img); y = 330
+    if E.get("logo") and os.path.exists(E["logo"]):
+        def lg():
+            im = g.Image.open(E["logo"]).convert("RGBA"); k = min(560 / im.width, 300 / im.height)
+            return im.resize((int(im.width * k), int(im.height * k)))
+        im = g.sprite(("logo", E["logo"]), lg); g.paste(img, im, 540, y + im.height / 2 - 40, te, 0, 99); y += im.height + 40
+    if E.get("tag"):
+        g.paste(img, g.sprite("e_tag", lambda: g.pill(E["tag"], "soft", size=38)), 540, y, te, 0, 99); y += 120
+    for i, line in enumerate(E.get("title", [])):
+        g.paste(img, g.sprite(("e_t", i, line), lambda: g.big(line, 96, "ink")), 540, y, te, .15 + i * .05, 99); y += 110
+    for i, line in enumerate(E.get("lines", [])):
+        g.paste(img, g.sprite(("e_l", i, line), lambda: g.big(line, 50, "muted")), 540, y, te, .3 + i * .05, 99); y += 70
+    y += 40
+    if E.get("old"):
+        g.paste(img, g.sprite("e_old", lambda: g.strike(E["old"])), 540, y, te, .45, 99); y += 160
+    if E.get("price"):
+        g.paste(img, g.sprite("e_new", lambda: g.big(E["price"], 190)), 540, y, te, .6, 99); y += 230
+    if E.get("button"):
+        im = g.sprite("e_btn", lambda: g.button(E["button"], E.get("price", "")))
+        if te > 1.3:
+            k = 1 + .03 * math.sin((te - .9) * 7); im = im.resize((int(im.width * k), int(im.height * k)))
+        g.paste(img, im, 540, y, te, .9, 99); y += 160
+    if E.get("hint") and te > 1.2:
+        g.paste(img, g.sprite("e_hint", lambda: g.big(E["hint"], 52, "ink")), 540, y, te, 1.2, 99)
+        cx, cy = 540, y + 130 + 18 * math.sin((te - 1.2) * 6)
+        d.line([cx, cy - 50, cx, cy + 30], fill=th.acc, width=16)
+        d.polygon([(cx - 40, cy + 10), (cx + 40, cy + 10), (cx, cy + 60)], fill=th.acc)
+    return img
+
 # ---------------------------------------------------------------- жоспар
 class Plan:
     def __init__(self, path):
@@ -497,27 +529,7 @@ class Plan:
 
     # --- соңғы экран
     def end_card(self, te):
-        g, E = self.g, self.end; img = self.bgf.copy(); d = g.Draw.Draw(img); y = 330
-        if E.get("tag"):
-            g.paste(img, g.sprite("e_tag", lambda: g.pill(E["tag"], "soft", size=38)), 540, y, te, 0, 99); y += 120
-        for i, line in enumerate(E.get("title", [])):
-            g.paste(img, g.sprite(("e_t", i), lambda: g.big(line, 96, "ink")), 540, y, te, .15 + i * .05, 99); y += 110
-        y += 40
-        if E.get("old"):
-            g.paste(img, g.sprite("e_old", lambda: g.strike(E["old"])), 540, y, te, .45, 99); y += 160
-        if E.get("price"):
-            g.paste(img, g.sprite("e_new", lambda: g.big(E["price"], 190)), 540, y, te, .6, 99); y += 230
-        if E.get("button"):
-            im = g.sprite("e_btn", lambda: g.button(E["button"], E.get("price", "")))
-            if te > 1.3:
-                k = 1 + .03 * math.sin((te - .9) * 7); im = im.resize((int(im.width * k), int(im.height * k)))
-            g.paste(img, im, 540, y, te, .9, 99); y += 160
-        if E.get("hint") and te > 1.2:
-            g.paste(img, g.sprite("e_hint", lambda: g.big(E["hint"], 52, "ink")), 540, y, te, 1.2, 99)
-            cx, cy = 540, y + 130 + 18 * math.sin((te - 1.2) * 6)
-            d.line([cx, cy - 50, cx, cy + 30], fill=self.th.acc, width=16)
-            d.polygon([(cx - 40, cy + 10), (cx + 40, cy + 10), (cx, cy + 60)], fill=self.th.acc)
-        return img
+        return end_card(self.g, self.th, self.bgf, self.end, te)
 
     # --- бір кадр
     def compose(self, to, fr):
@@ -584,11 +596,10 @@ class Plan:
         return np.frombuffer(r, np.uint8).reshape(H, W, 3)
 
 # ---------------------------------------------------------------- дыбыс
-def make_audio(P, outwav):
+def synth_music(T):
+    """Жайлы фон музыкасы (өзіміз синтездейміз — авторлық құқық мәселесі жоқ)"""
     import numpy as np
-    d = os.path.dirname(P.path); T = P.total; N = int(T * SR) + SR
-    want_music = P.p.get("music", True); want_sfx = P.p.get("sfx", True)
-    music = np.zeros(N); sfx = np.zeros(N)
+    N = int(T * SR) + SR; music = np.zeros(N)
     def add(buf, s, x):
         if s >= N: return
         e = min(N, s + len(x)); buf[s:e] += x[:e - s]
@@ -601,50 +612,75 @@ def make_audio(P, outwav):
             return s * env(n, .8, .9) * .18
         return (np.sin(2 * np.pi * f * t) + .3 * np.sin(4 * np.pi * f * t)) * np.exp(-t * 4.5) * env(n, .005, .05) * .16
     hz = lambda m: 440 * 2 ** ((m - 69) / 12)
-    if want_music:
-        bar = 4 * 60 / 92; chords = [[53, 57, 60, 64], [57, 60, 64, 67], [50, 53, 57, 60], [46, 50, 53, 57]]
-        t0, i = 0, 0
-        while t0 < T:
-            ch = chords[i % 4]; s = int(t0 * SR)
-            for m in ch: add(music, s, note(hz(m), bar + .6, "pad"))
-            add(music, s, note(hz(ch[0] - 12), bar, "pad") * 1.3)
-            for k in range(8):
-                m = ch[[0, 2, 1, 3, 2, 1, 3, 2][k]] + 12; add(music, int((t0 + k * bar / 8) * SR), note(hz(m), .6, "pluck"))
-            t0 += bar; i += 1
-        dl = int(.11 * SR); wet = np.zeros_like(music)
-        for k, gg in enumerate([.35, .22, .14, .08]): wet[dl * (k + 1):] += music[:-dl * (k + 1)] * gg
-        music = music + wet; music /= max(1e-6, np.abs(music).max())
-        fd = int(1.5 * SR); e = int(T * SR); music[e - fd:e] *= np.linspace(1, 0, fd); music[e:] = 0
-    if want_sfx:
-        rng = np.random.default_rng(1)
-        def pop(at, f=900):
-            n = int(.12 * SR); t = np.arange(n) / SR
-            add(sfx, int(at * SR), np.sin(2 * np.pi * (f * np.exp(-t * 18) + 300) * t) * np.exp(-t * 35) * .5)
-        def whoosh(at):
-            n = int(.45 * SR); x = rng.standard_normal(n); k = np.linspace(0, 1, n)
-            x = np.convolve(x, np.ones(30) / 30, "same") * np.sin(np.pi * k) ** 2 * .45
-            add(sfx, int(max(0, at - .25) * SR), x)
+    bar = 4 * 60 / 92; chords = [[53, 57, 60, 64], [57, 60, 64, 67], [50, 53, 57, 60], [46, 50, 53, 57]]
+    t0, i = 0, 0
+    while t0 < T:
+        ch = chords[i % 4]; s = int(t0 * SR)
+        for m in ch: add(music, s, note(hz(m), bar + .6, "pad"))
+        add(music, s, note(hz(ch[0] - 12), bar, "pad") * 1.3)
+        for k in range(8):
+            m = ch[[0, 2, 1, 3, 2, 1, 3, 2][k]] + 12; add(music, int((t0 + k * bar / 8) * SR), note(hz(m), .6, "pluck"))
+        t0 += bar; i += 1
+    dl = int(.11 * SR); wet = np.zeros_like(music)
+    for k, gg in enumerate([.35, .22, .14, .08]): wet[dl * (k + 1):] += music[:-dl * (k + 1)] * gg
+    music = music + wet; music /= max(1e-6, np.abs(music).max())
+    fd = int(1.5 * SR); e = int(T * SR); music[e - fd:e] *= np.linspace(1, 0, fd); music[e:] = 0
+    return music
+
+class Sfx:
+    def __init__(self, T):
+        import numpy as np
+        self.np = np; self.N = int(T * SR) + SR; self.a = np.zeros(self.N); self.rng = np.random.default_rng(1)
+    def add(self, s, x):
+        if s >= self.N: return
+        e = min(self.N, s + len(x)); self.a[s:e] += x[:e - s]
+    def pop(self, at, f=900):
+        np = self.np; n = int(.12 * SR); t = np.arange(n) / SR
+        self.add(int(at * SR), np.sin(2 * np.pi * (f * np.exp(-t * 18) + 300) * t) * np.exp(-t * 35) * .5)
+    def whoosh(self, at):
+        np = self.np; n = int(.45 * SR); x = self.rng.standard_normal(n); k = np.linspace(0, 1, n)
+        x = np.convolve(x, np.ones(30) / 30, "same") * np.sin(np.pi * k) ** 2 * .45
+        self.add(int(max(0, at - .25) * SR), x)
+
+def write_wav(path, a):
+    import numpy as np
+    a = (np.clip(a, -1, 1) * 32767).astype(np.int16)
+    w = wave.open(path, "w"); w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes(a.tobytes()); w.close()
+
+def mix_audio(voice_src, music, sfx, T, outwav, music_volume=0.2):
+    """дауыс + музыка (дауыс кезінде тыншиды) + эффектілер -> -14 LUFS"""
+    import numpy as np
+    d = os.path.dirname(outwav); mw, sw = os.path.join(d, "music.wav"), os.path.join(d, "sfx.wav")
+    write_wav(mw, music if music is not None else np.zeros(int(T * SR) + SR)); write_wav(sw, sfx)
+    if voice_src:
+        inputs = ["-i", voice_src, "-i", mw, "-i", sw]
+        fc = (f"[0:a]aresample={SR},pan=mono|c0=c0,asplit[v][vk];[1:a]volume={music_volume}[m];"
+              "[m][vk]sidechaincompress=threshold=0.02:ratio=8:attack=30:release=500[md];[2:a]volume=0.30[s];"
+              f"[v]apad[vp];[vp][md][s]amix=inputs=3:normalize=0:duration=longest,atrim=0:{T:.3f},"
+              "loudnorm=I=-14:TP=-1.5:LRA=11[out]")
+    else:
+        inputs = ["-i", mw, "-i", sw]
+        fc = (f"[0:a]volume={max(music_volume, .5)}[m];[1:a]volume=0.30[s];[m][s]amix=inputs=2:normalize=0:duration=longest,"
+              f"atrim=0:{T:.3f},loudnorm=I=-14:TP=-1.5:LRA=11[out]")
+    subprocess.run(["ffmpeg", "-v", "error", "-y", *inputs, "-filter_complex", fc, "-map", "[out]",
+                    "-ar", str(SR), "-c:a", "pcm_s16le", outwav], check=True)
+
+def make_audio(P, outwav):
+    T = P.total
+    music = synth_music(T) if P.p.get("music", True) else None
+    fx = Sfx(T)
+    if P.p.get("sfx", True):
         for e in P.el:
             o = P.out_of(e["s"] + .001)
-            if o is not None: pop(o, 700 if e["type"] == "pill" else 1000)
-        for o0, o1, a, i in P.segs[1:]: whoosh(o0)
+            if o is not None: fx.pop(o, 700 if e["type"] == "pill" else 1000)
+        for o0, o1, a, i in P.segs[1:]: fx.whoosh(o0)
         for L in P.layout[1:]:
             o = P.out_of(L["s"] + .001)
-            if o is not None: whoosh(o)
+            if o is not None: fx.whoosh(o)
         if P.end:
-            whoosh(P.body)
-            for x in (0, .15, .45, .6, .9, 1.2): pop(P.body + x, 1100)
-    def wr(path, a):
-        a = (np.clip(a, -1, 1) * 32767).astype(np.int16)
-        w = wave.open(path, "w"); w.setnchannels(1); w.setsampwidth(2); w.setframerate(SR); w.writeframes(a.tobytes()); w.close()
-    mw, sw = os.path.join(d, "music.wav"), os.path.join(d, "sfx.wav")
-    wr(mw, music); wr(sw, sfx)
-    mv = float(P.p.get("music_volume", 0.20))
-    subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", P.cut(), "-i", mw, "-i", sw, "-filter_complex",
-                    f"[0:a]pan=mono|c0=c0,asplit[v][vk];[1:a]volume={mv}[m];"
-                    "[m][vk]sidechaincompress=threshold=0.02:ratio=8:attack=30:release=500[md];[2:a]volume=0.30[s];"
-                    f"[v]apad[vp];[vp][md][s]amix=inputs=3:normalize=0:duration=longest,atrim=0:{T:.3f},"
-                    "loudnorm=I=-14:TP=-1.5:LRA=11[out]", "-map", "[out]", "-ar", str(SR), "-c:a", "pcm_s16le", outwav], check=True)
+            fx.whoosh(P.body)
+            for x in (0, .15, .45, .6, .9, 1.2): fx.pop(P.body + x, 1100)
+    mix_audio(P.cut(), music, fx.a, T, outwav, float(P.p.get("music_volume", 0.20)))
 
 # ---------------------------------------------------------------- командалар
 def sketch(plan_path, times=None):
