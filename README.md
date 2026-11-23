@@ -17,7 +17,15 @@
 1. **Өзіңізге көшіріп алу.** Осы бетте жасыл **«Use this template»** → **«Create a new repository»** → аты, мысалы `montazh` → **Private** → **«Create repository»**.
    (Батырма көрінбесе: браузер мәзірінен «Сайттың компьютер нұсқасы / Desktop site» қосыңыз.)
 2. **GitHub-ты Claude-қа қосу.** Claude қосымшасы → **Code** → жаңа сессия → репозиторий таңдау → GitHub-та **Only select repositories** → өз `montazh` репозиторийіңіз → **Save** → Claude-қа оралу.
-3. **Орта (желіге рұқсат).** Сессия ашылатын жерде орта (environment) таңдауы бар → **жаңа орта** жасаңыз: аты `Монтаж`, желіге рұқсат — **толық (Full / Unrestricted)**. Бұл керек: Claude дауысты тану моделін және Google Drive-тағы видеоны жүктей алуы үшін.
+3. **Орта (environment).** Сессия ашылатын жерде орта таңдауы бар → **жаңа орта** жасаңыз:
+   - **Name:** `Монтаж`
+   - **Network access:** **Full / Unrestricted** (толық) — Claude құралдарды және Google Drive-тағы видеоны жүктей алуы үшін.
+   - **Setup script** — мына 3 жолды түгел көшіріп қойыңыз (әр сессияда құралдар алдын ала орнатылып тұрады):
+     ```
+     apt-get update -qq && apt-get install -y -qq ffmpeg || true
+     pip install -q numpy pillow opencv-python-headless faster-whisper gdown || true
+     python3 -c "from faster_whisper import WhisperModel; WhisperModel('medium', device='cpu', compute_type='int8')" || true
+     ```
 4. **Тексеру.** Сессияда жазыңыз: «Сәлем, бәрі дайын ба? Тексерші». Claude керек құралдарды өзі орнатады (бірінші рет 3–5 минут).
 
 ## Қалай қолданамыз
