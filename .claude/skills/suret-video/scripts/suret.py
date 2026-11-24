@@ -168,16 +168,19 @@ class Plan:
                 if t >= ts: self.g.paste(img, im, 540, int(sc.get("title_y", 330)), t, ts, sc["e"])
         for e in self.el:
             if e["s"] <= t < e["e"]:
-                im = K.Plan.el_sprite(self, e, t); self.g.paste(img, im, e.get("x", 540), e["y"], t, e["s"], e["e"])
+                if e["type"] == "big" and e.get("shadow"):
+                    im = self.g.sprite(("bigsh", e["text"], e.get("size", 120)), lambda: self.shadow_text(e["text"], int(e.get("size", 120)), self.th.col(e.get("color", "accent"))))
+                else: im = K.Plan.el_sprite(self, e, t)
+                self.g.paste(img, im, e.get("x", 540), e["y"], t, e["s"], e["e"])
 
-    def shadow_text(self, text, size):
+    def shadow_text(self, text, size, fill=(255, 255, 255)):
         f = K.F(size, "Black")
         while f.getlength(text) > 940 and size > 40: size -= 4; f = K.F(size, "Black")
         tw = int(f.getlength(text)); im = self.Image.new("RGBA", (tw + 80, int(size * 1.6)), (0, 0, 0, 0))
         sh = self.Image.new("RGBA", im.size, (0, 0, 0, 0))
         self.g.Draw.Draw(sh).text((im.width / 2, im.height / 2), text, font=f, fill=(0, 0, 0, 200), anchor="mm")
         sh = sh.filter(self.g.Filter.GaussianBlur(14)); im.alpha_composite(sh)
-        self.g.Draw.Draw(im).text((im.width / 2, im.height / 2), text, font=f, fill=(255, 255, 255), anchor="mm")
+        self.g.Draw.Draw(im).text((im.width / 2, im.height / 2), text, font=f, fill=fill, anchor="mm")
         return im
 
     def compose(self, t):
@@ -271,15 +274,15 @@ def cover(path):
     sc = next((s for s in P.scenes if s["img"] == C.get("img")), P.scenes[0])
     img = P.scene_frame(dict(sc, motion="still"), sc["s"]).convert("RGBA")
     import numpy as np
-    y = np.linspace(0, 1, H)[:, None]; a = np.clip((.55 - y) / .55, 0, 1) ** 1.2 * 170
+    y = np.linspace(0, 1, H)[:, None]; a = np.clip((.62 - y) / .62, 0, 1) ** 1.1 * 215
     v = np.zeros((H, W, 4), np.uint8); v[..., 3] = np.repeat(a, W, 1).astype(np.uint8); img.alpha_composite(P.Image.fromarray(v))
-    yy = 360; g = P.g
+    yy = int(C.get("y", 360)); g = P.g
     if C.get("tag"):
         im = g.pill(C["tag"], size=44); img.alpha_composite(im, (int(540 - im.width / 2), int(yy - im.height / 2))); yy += 140
     for line in C.get("lines", []):
         text, color = (line, "white") if isinstance(line, str) else (line[0], line[1])
         size = 130 if color == "accent" else 84
-        im = P.shadow_text(text, size) if color == "white" else g.big(text, size, color, maxw=900)
+        im = P.shadow_text(text, size, P.th.col(color))
         img.alpha_composite(im, (int(540 - im.width / 2), int(yy - im.height / 2))); yy += int(im.height * .85)
     os.makedirs("Дайын", exist_ok=True); out = os.path.join("Дайын", f"{P.name}_обложка.jpg")
     img.convert("RGB").save(out, quality=93); print("дайын:", out)
