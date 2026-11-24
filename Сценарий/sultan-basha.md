@@ -14,3 +14,27 @@ Vertical 9:16 photo, cinematic, warm golden and soft purple light, photorealisti
 
 ## 4-сурет — отбасы тост көтереді
 Vertical 9:16 photo, cinematic, warm golden light, photorealistic, 35mm. A happy Kazakh family at a festive round banquet table: grandparents, parents and young adults raising glasses of juice for a toast, smiling at each other. The table is full of fruit platters, salads and hot dishes on gold stands; white oval-back chairs with gold frames, crystal chandelier glowing above. Shallow depth of field, warm emotional atmosphere, premium. No text, no logos.
+
+## Деректер
+- Дауыс: әйел. Акция: қараша–желтоқсан, банкет кісі басына 6 000 ₸, ыстық тағам тегін.
+- WhatsApp: 8 702 846 06 50. Мекенжай: Атырау, Х. Досмұхамедов 42. Залдар 36–250 қонақ.
+
+## Сахналар ↔ дауыс
+1. ИИ-1 той — Тойыңыз ұзақ есте қалсын десеңіз — Sultan Basha-ға келіңіз!
+2. foto_zal — Атыраудағы салтанатты залдарымыз отыз алты қонақтан екі жүз елу қонаққа дейін сыйғызады.
+3. foto_sahna — Кең би алаңы мен әдемі сахна — бәрі сіздің мерекеңіз үшін.
+4. foto_tagam — Қараша мен желтоқсанда арнайы акция! Банкет кісі басына небәрі алты мың теңге,
+5. ИИ-2 ыстық тағам — ал ыстық тағам — тегін!
+6. ИИ-3 караоке — Ән салғыңыз келсе, караоке де бар.
+7. ИИ-4 отбасы — Қуанышыңызды жақындарыңызбен бірге тойлаңыз.
+8. Логотип/соңғы экран — Мекенжайымыз: Атырау, Досмұхамедов көшесі, қырық екі. Орын брондау — WhatsApp арқылы!
+
+## ElevenLabs мәтіні
+Тойыңыз ұзақ есте қалсын десеңіз — Sultan Basha-ға келіңіз!
+Атыраудағы салтанатты залдарымыз отыз алты қонақтан екі жүз елу қонаққа дейін сыйғызады.
+Кең би алаңы мен әдемі сахна — бәрі сіздің мерекеңіз үшін.
+Қараша мен желтоқсанда — арнайы акция! Банкет кісі басына небәрі алты мың теңге... ал ыстық тағам — тегін!
+Ән салғыңыз келсе, караоке де бар.
+Қуанышыңызды жақындарыңызбен бірге тойлаңыз.
+Мекенжайымыз: Атырау, Досмұхамедов көшесі, қырық екі.
+Орын брондау — WhatsApp арқылы!
