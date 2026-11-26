@@ -76,8 +76,12 @@ window.renderFrame = (T) => {
   fg.innerHTML = fgS;
   let uiS = sc.ui ? sc.ui(t, sh) : '';
   uiS += vs ? subtitle(vs.lines, tn) : subtitle(sc.lines, t);
+  if (qs.has('cover')) uiS = `<rect width="1080" height="700" fill="url(#cvg)"/><defs><linearGradient id="cvg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".55"/><stop offset="1" stop-color="#000" stop-opacity="0"/></linearGradient></defs>`
+    + `<text x="540" y="300" text-anchor="middle" font-size="122" font-weight="900" fill="#ffd36a" stroke="#1d140f" stroke-width="20" paint-order="stroke">ҚАНЫШТЫҢ</text>`
+    + `<text x="540" y="470" text-anchor="middle" font-size="150" font-weight="900" fill="#fff" stroke="#1d140f" stroke-width="20" paint-order="stroke">АРМАНЫ</text>`
+    + `<text x="540" y="560" text-anchor="middle" font-size="46" font-weight="800" fill="#bffff6" stroke="#1d140f" stroke-width="10" paint-order="stroke">мультфильм</text>`;
   // көріністер арасы — қараңғылау
-  const D = durOf(sc); const fade = Math.max(1 - tn / .35, U.ease((tn - (D - .35)) / .35));
+  const D = durOf(sc); const fade = qs.has('cover') ? 0 : Math.max(1 - tn / .35, U.ease((tn - (D - .35)) / .35));
   if (fade > 0) uiS += `<rect width="1080" height="1920" fill="#000" opacity="${U.clamp(fade, 0, 1).toFixed(3)}"/>`;
   if (sh.flash) uiS += `<rect width="1080" height="1920" fill="#fff" opacity="${sh.flash.toFixed(3)}"/>`;
   ui.innerHTML = uiS;
