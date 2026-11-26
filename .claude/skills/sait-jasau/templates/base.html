@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Сайт атауы</title>
+<meta name="description" content="Қысқа сипаттама">
+<meta name="theme-color" content="#0B0807">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  /* СТИЛЬ: body класы арқылы — neon (әдепкі), light, gold. Акцент түсі --or/--or2 */
+  :root{--bg:#0B0807;--card:rgba(255,255,255,.06);--line:rgba(255,255,255,.12);--ink:#FFF4EC;--muted:#C9B6AA;
+        --or:#FF5A1F;--or2:#FF9A3D;--glow:rgba(255,90,31,.45);--navbg:rgba(11,8,7,.6)}
+  body.light{--bg:#FFF8F3;--card:#FFFFFF;--line:#F3DCCD;--ink:#1A1210;--muted:#6B5D57;--glow:rgba(255,90,31,.25);--navbg:rgba(255,248,243,.8)}
+  body.gold{--bg:#0E0C09;--card:rgba(232,176,75,.07);--line:rgba(232,176,75,.25);--ink:#FBF3E4;--muted:#CDBFA6;
+        --or:#E8B04B;--or2:#F6D58E;--glow:rgba(232,176,75,.35);--navbg:rgba(14,12,9,.65)}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:Montserrat,system-ui,sans-serif;line-height:1.45;overflow-x:hidden;
+       padding-bottom:calc(90px + env(safe-area-inset-bottom))}
+  body::before{content:"";position:fixed;inset:-20%;z-index:-1;pointer-events:none;
+       background:radial-gradient(40% 30% at 85% 8%,rgba(255,90,31,.35),transparent 70%),
+                  radial-gradient(35% 25% at 5% 40%,rgba(255,154,61,.18),transparent 70%),
+                  radial-gradient(45% 30% at 90% 85%,rgba(255,60,90,.18),transparent 70%)}
+  .wrap{max-width:520px;margin:0 auto;padding:0 16px}
+  section{padding:44px 0}
+  h2{font-size:28px;font-weight:900;text-transform:uppercase;line-height:1.05;margin-bottom:18px;letter-spacing:-.01em}
+  h2 em,h1 em{font-style:normal;background:linear-gradient(90deg,var(--or),var(--or2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .kicker{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+          color:var(--or2);margin-bottom:10px}
+  .kicker::before{content:"";width:22px;height:2px;background:var(--or)}
+  .glass{background:var(--card);border:1px solid var(--line);border-radius:22px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+
+  /* nav */
+  nav{position:sticky;top:0;z-index:20;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:var(--navbg);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:58px}
+  .logo{font-weight:900;font-size:17px;letter-spacing:.02em}
+  .logo b{color:var(--or)}
+  nav a.mini{font-size:12px;font-weight:800;color:#fff;text-decoration:none;padding:9px 14px;border-radius:99px;
+             background:linear-gradient(90deg,var(--or),var(--or2))}
+
+  /* hero */
+  .hero{padding-top:26px}
+  .hero .pic{position:relative;border-radius:28px;overflow:hidden;border:1px solid var(--line);box-shadow:0 24px 60px var(--glow);margin-bottom:22px}
+  .hero .pic img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;object-position:50% 25%}
+  .hero .pic .badge{position:absolute;left:14px;bottom:14px;right:14px;display:flex;gap:8px;flex-wrap:wrap}
+  .hero .pic .badge span{font-size:12px;font-weight:800;padding:8px 12px;border-radius:99px;background:rgba(11,8,7,.7);border:1px solid var(--line);backdrop-filter:blur(8px)}
+  h1{font-size:44px;font-weight:900;line-height:1;text-transform:uppercase;margin-bottom:12px;letter-spacing:-.02em}
+  .hero p{color:var(--muted);font-weight:600;font-size:16px;margin-bottom:20px}
+  .btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:17px 20px;border-radius:18px;text-decoration:none;
+       color:#fff;font-weight:900;font-size:15px;text-transform:uppercase;letter-spacing:.02em;
+       background:linear-gradient(90deg,var(--or),var(--or2));box-shadow:0 12px 30px var(--glow)}
+  .btn.ghost{background:transparent;border:1px solid var(--line);box-shadow:none;margin-top:10px}
+
+  /* stats */
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .stat{padding:18px 10px;text-align:center}
+  .stat b{display:block;font-size:28px;white-space:nowrap;font-weight:900;background:linear-gradient(180deg,var(--ink),var(--or2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat span{font-size:12px;color:var(--muted);font-weight:700}
+
+  /* services */
+  .svc{display:flex;gap:14px;align-items:flex-start;padding:16px;margin-bottom:10px}
+  .svc .n{flex:0 0 44px;height:44px;border-radius:14px;display:grid;place-items:center;font-weight:900;color:#fff;
+          background:linear-gradient(135deg,var(--or),var(--or2));box-shadow:0 8px 20px var(--glow)}
+  .svc h3{font-size:16px;font-weight:800;margin-bottom:3px}
+  .svc p{font-size:13px;color:var(--muted);font-weight:500}
+
+  /* works */
+  .rail{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-padding:0 16px;padding:4px 16px 10px;margin:0 -16px}
+  .rail::after{content:"";flex:0 0 4px}
+  .rail::-webkit-scrollbar{display:none}
+  .work{flex:0 0 62%;scroll-snap-align:start}
+  .work .ph{position:relative;aspect-ratio:9/16;border-radius:20px;overflow:hidden;border:1px solid var(--line);background:#000}
+  .work video{width:100%;height:100%;object-fit:cover;display:block}
+  .work .snd{position:absolute;right:10px;bottom:10px;width:32px;height:32px;border-radius:99px;display:grid;place-items:center;
+             background:rgba(0,0,0,.55);font-size:14px;pointer-events:none}
+  .work h4{font-size:14px;font-weight:800;margin-top:10px}
+  .work small{font-size:12px;color:var(--muted);font-weight:600}
+  .hint{font-size:12px;color:var(--muted);font-weight:600;margin-top:6px}
+
+  /* course */
+  .course{padding:22px;position:relative;overflow:hidden}
+  .course::after{content:"";position:absolute;width:220px;height:220px;right:-60px;top:-60px;border-radius:50%;
+                 background:radial-gradient(circle,var(--glow),transparent 70%)}
+  .course .tag{display:inline-block;font-size:11px;font-weight:900;padding:6px 10px;border-radius:99px;background:rgba(255,90,31,.18);color:var(--or2);margin-bottom:12px}
+  .course h3{font-size:30px;font-weight:900;line-height:1.05;margin-bottom:10px}
+  .course ul{list-style:none;margin:0 0 18px}
+  .course li{font-size:14px;font-weight:600;color:var(--muted);padding:6px 0 6px 26px;position:relative}
+  .course li::before{content:"✓";position:absolute;left:0;color:var(--or);font-weight:900}
+  .price{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+  .price b{font-size:40px;font-weight:900;color:var(--or2)}
+  .price s{color:var(--muted);font-weight:700}
+
+  /* about */
+  .about{display:flex;gap:16px;padding:16px;align-items:center}
+  .about img{width:96px;height:120px;object-fit:cover;border-radius:16px;flex:0 0 96px}
+  .about p{font-size:14px;color:var(--muted);font-weight:500}
+  .about h3{font-size:19px;font-weight:900;margin-bottom:4px}
+
+  /* contacts */
+  .links a{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;margin-bottom:10px;text-decoration:none;color:var(--ink);font-weight:800}
+  .links a.wa{border-color:rgba(37,211,102,.5);background:rgba(37,211,102,.12)}
+  .links a span{color:var(--muted);font-weight:600;font-size:13px}
+  footer{text-align:center;color:var(--muted);font-size:11px;padding:10px 16px 20px}
+
+  /* sticky */
+  .bar{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:10px 0 calc(10px + env(safe-area-inset-bottom));
+       background:var(--navbg);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+  .bar .btn{padding:15px}
+
+  /* reveal */
+  .rv{opacity:0;transform:translateY(26px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+  .rv.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body class="neon">
+<!-- ҮЛГІ. Бөлімдерді керегіне қарай қосып/алып таста. Барлық мәтін — пайдаланушының нақты деректері. -->
+<nav><div class="wrap"><div class="logo">АТЫ <b>БРЕНД</b></div><a class="mini" href="#offer">Батырма</a></div></nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="pic rv"><img src="photo.jpg" alt="">
+      <div class="badge"><span>🎯 Белгі 1</span><span>✨ Белгі 2</span></div></div>
+    <div class="kicker rv">Қысқа ілмек</div>
+    <h1 class="rv">Басты <em>тақырып</em></h1>
+    <p class="rv">Бір-екі сөйлеммен: кім, не ұсынады, кімге пайдалы.</p>
+    <a class="btn rv" href="#offer">Негізгі әрекет →</a>
+    <a class="btn ghost rv" href="https://wa.me/7XXXXXXXXXX">💬 WhatsApp-қа жазу</a>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="stats">
+      <div class="stat glass rv"><b data-n="5">0</b><span>жыл</span></div>
+      <div class="stat glass rv"><b data-n="100">0</b><span>клиент</span></div>
+      <div class="stat glass rv"><b data-n="20">0</b><span>жоба</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="works">
+  <div class="wrap">
+    <div class="kicker rv">Портфолио</div>
+    <h2 class="rv">Жұмыс<em>тар</em></h2>
+    <div class="rail">
+      <div class="work rv"><div class="ph"><video src="work1.mp4" poster="work1.jpg" muted loop playsinline preload="none"></video><span class="snd">🔇</span></div><h4>Атауы</h4><small>Сипаттама</small></div>
+    </div>
+    <p class="hint">← Жылжытып көріңіз</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker rv">Қызметтер</div>
+    <h2 class="rv">Не <em>ұсынамыз?</em></h2>
+    <div class="svc glass rv"><div class="n">01</div><div><h3>Қызмет</h3><p>Қысқа сипаттама.</p></div></div>
+  </div>
+</section>
+
+<section id="offer">
+  <div class="wrap">
+    <div class="course glass rv">
+      <span class="tag">Белгі</span>
+      <h3>Ұсыныс атауы</h3>
+      <ul><li>Артықшылық 1</li><li>Артықшылық 2</li></ul>
+      <div class="price"><b>0 ₸</b></div>
+      <a class="btn" href="#">Әрекет →</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker rv">Байланыс</div>
+    <h2 class="rv">Хабарласу</h2>
+    <div class="links">
+      <a class="glass rv wa" href="https://wa.me/7XXXXXXXXXX">WhatsApp <span>нөмір →</span></a>
+      <a class="glass rv" href="https://instagram.com/xxx">Instagram <span>@xxx →</span></a>
+    </div>
+  </div>
+</section>
+
+<footer>© Аты</footer>
+<div class="bar"><div class="wrap"><a class="btn" href="#offer">Негізгі әрекет</a></div></div>
+
+<script>
+  // элементтер біртіндеп шығады
+  var io = new IntersectionObserver(function(es){ es.forEach(function(e){
+    if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);
+      var b=e.target.querySelector('b[data-n]'); if(b) count(b); } }); }, {threshold:.15});
+  document.querySelectorAll('.rv').forEach(function(el,i){ el.style.transitionDelay = (i%4)*70+'ms'; io.observe(el); });
+  function count(b){ var n=+b.dataset.n, t0=performance.now();
+    (function f(t){ var p=Math.min(1,(t-t0)/1400), v=Math.round(n*(1-Math.pow(1-p,3)));
+      b.textContent = v.toLocaleString('ru-RU').replace(/ /g,' ') + (p===1?'+':''); if(p<1) requestAnimationFrame(f); })(t0); }
+
+  // видеолар
+  var vids=[].slice.call(document.querySelectorAll('.work video'));
+  var vo=new IntersectionObserver(function(es){es.forEach(function(e){ e.isIntersecting?e.target.play().catch(function(){}):e.target.pause(); })},{threshold:.6});
+  vids.forEach(function(v){ vo.observe(v); v.parentNode.addEventListener('click',function(){
+    var on=v.muted; vids.forEach(function(o){o.muted=true;o.nextSibling.textContent='🔇'});
+    v.muted=!on; v.nextSibling.textContent=on?'🔊':'🔇'; v.play().catch(function(){}); }); });
+</script>
+</body>
+</html>
