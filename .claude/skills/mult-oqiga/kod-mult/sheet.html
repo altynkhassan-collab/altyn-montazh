@@ -1,0 +1,27 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:M;src:url(Montserrat.ttf)}
+html,body{margin:0;background:#f6efe0;font-family:M}
+svg{display:block}
+</style><script src="chars.js"></script></head><body>
+<svg id="s" width="1920" height="1500" viewBox="0 0 1920 1500"></svg>
+<script>
+const P=CH.place; let s='';
+s+=`<rect width="1920" height="1500" fill="#f6efe0"/>`;
+s+=`<text x="960" y="78" text-anchor="middle" font-size="54" font-weight="800" fill="#3a2a1a">ҚАНЫШТЫҢ АРМАНЫ — кейіпкерлер</text>`;
+const row1=[['kanysh',260,1,'Қаныш'],['father',620,1,'Әкесі'],['mother',960,1,'Анасы'],['adult',1300,1,'Ересек Қаныш']];
+for(const [id,x,sc,l] of row1){ s+=`<ellipse cx="${x}" cy="652" rx="110" ry="16" fill="#000" opacity=".12"/>`; s+=P(id,x,650,sc,{emotion:'happy',hold:id==='adult'?'hammer':(id==='kanysh'?'map':null), armR: id==='kanysh'?-40:(id==='adult'?-30:8)}); s+=`<text x="${x}" y="720" text-anchor="middle" font-size="34" font-weight="700" fill="#3a2a1a">${l}</text>`;}
+// тастар
+const st=[['copper',1560,'Мыс'],['coal',1720,'Көмір'],['gold',1640,'Алтын']];
+s+=P('copper',1555,420,1,{emotion:'happy'});s+=`<text x="1555" y="470" text-anchor="middle" font-size="30" font-weight="700" fill="#3a2a1a">Мыс</text>`;
+s+=P('coal',1760,420,1,{emotion:'happy'});s+=`<text x="1760" y="470" text-anchor="middle" font-size="30" font-weight="700" fill="#3a2a1a">Көмір</text>`;
+s+=P('gold',1660,650,1,{emotion:'proud',glow:1});s+=`<text x="1660" y="720" text-anchor="middle" font-size="30" font-weight="700" fill="#3a2a1a">Алтын</text>`;
+// эмоциялар
+s+=`<text x="960" y="820" text-anchor="middle" font-size="40" font-weight="800" fill="#3a2a1a">Эмоциялар</text>`;
+const em=[['neutral','тыныш'],['happy','қуаныш'],['laugh','күлкі'],['surprised','таңданыс'],['worried','қобалжу'],['thinking','ойлану'],['talk','сөйлеу']];
+em.forEach(([e,l],i)=>{const x=170+i*265; s+=`<g transform="translate(${x} 1300)">`+`<clipPath id="c${i}"><rect x="-130" y="-470" width="260" height="300"/></clipPath><g clip-path="url(#c${i})" transform="translate(0 0)">${CH.place('kanysh',0,-25,1.45,{emotion:e,mouth:e==='talk'?.7:0})}</g></g>`; s+=`<text x="${x}" y="1180" text-anchor="middle" font-size="30" font-weight="700" fill="#3a2a1a">${l}</text>`;});
+em.forEach(([e,l],i)=>{ if(i>4) return; const x=170+i*265+0; });
+// әке мен ана эмоциялары
+const em2=[['father','happy'],['father','surprised'],['father','worried'],['mother','happy'],['mother','surprised'],['mother','worried'],['mother','talk']];
+em2.forEach(([id,e],i)=>{const x=170+i*265; s+=`<g transform="translate(${x} 1480)"><clipPath id="d${i}"><rect x="-130" y="-280" width="260" height="270"/></clipPath><g clip-path="url(#d${i})">${CH.place(id,0,id==='father'?138:122,1.05,{emotion:e,mouth:e==='talk'?.7:0})}</g></g>`;});
+document.getElementById('s').innerHTML=s;
+</script></body></html>

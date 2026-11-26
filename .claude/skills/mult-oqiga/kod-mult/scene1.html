@@ -1,0 +1,163 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:M;src:url(Montserrat.ttf)}
+html,body{margin:0;background:#000;overflow:hidden;font-family:M}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden}
+#bg,#fg,#ui{position:absolute;left:0;top:0;width:1080px;height:1920px}
+#bg canvas{display:block}
+</style><script src="chars.js"></script></head><body>
+<div id="stage"><div id="bg"></div>
+<svg id="fg" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+<svg id="ui" width="1080" height="1920" viewBox="0 0 1080 1920"></svg></div>
+<script type="module">
+import { makeRenderer, houseInterior, W, H } from './room.js';
+const R = makeRenderer();
+const room = houseInterior();
+const fg = document.getElementById('fg'), ui = document.getElementById('ui');
+const P = CH.place;
+
+const lerp = (a, b, k) => a + (b - a) * k;
+const ease = k => k < 0 ? 0 : k > 1 ? 1 : k * k * (3 - 2 * k);
+const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
+// уақытша «сөйлеу» (дауыс келгенде дыбыс күшімен ауыстырылады)
+const talk = (t, a, b) => (t > a && t < b) ? clamp(.15 + .85 * Math.abs(Math.sin(t * 12.5) * Math.sin(t * 7.1 + 1.3)), 0, 1) : 0;
+const blink = (t, ph) => { const x = (t + ph) % 3.7; return x < .14 ? Math.sin(x / .14 * Math.PI) : 0; };
+
+const SUBS = [
+  [0.7, 3.3, 'Әке, бұл қандай карта?'],
+  [3.6, 6.2, 'Бұл – туған өлкеміздің картасы.'],
+  [6.2, 8.9, 'Бірақ мына белгілердің мағынасын мен де білмеймін.'],
+  [9.1, 11.6, 'Қараңызшы! Мына белгі жарқырап тұр!'],
+];
+const TOTAL = 15.0;
+
+// ----- 2D бөлшектер -----
+function table(t, glow) {
+  let s = '';
+  // үстел
+  s += `<path d="M150 1395 L930 1395 L980 1465 L100 1465Z" fill="#8a5530" stroke="#1d140f" stroke-width="6" stroke-linejoin="round"/>`;
+  s += `<path d="M100 1465 L980 1465 L980 1560 L100 1560Z" fill="#6b3f22" stroke="#1d140f" stroke-width="6"/>`;
+  for (let x = 160; x < 960; x += 120) s += `<path d="M${x} 1530 q20 -40 40 0 q20 -40 40 0" fill="none" stroke="#d9a843" stroke-width="5"/>`;
+  s += `<rect x="120" y="1560" width="46" height="150" fill="#5a3420" stroke="#1d140f" stroke-width="6"/><rect x="914" y="1560" width="46" height="150" fill="#5a3420" stroke="#1d140f" stroke-width="6"/>`;
+  // карта
+  s += `<g transform="translate(300 1402)"><path d="M0 8 L300 0 L330 52 L-20 60Z" fill="#e8d098" stroke="#1d140f" stroke-width="5" stroke-linejoin="round"/>`;
+  s += `<path d="M20 44 L60 18 L90 38 L130 12 L170 40" fill="none" stroke="#8a6a3a" stroke-width="4"/><path d="M190 46 Q230 20 290 36" fill="none" stroke="#4a86b8" stroke-width="4"/>`;
+  s += `<circle cx="236" cy="22" r="${9 + glow * 4}" fill="${glow > .05 ? '#5ff5e2' : '#7a5a2a'}" stroke="#1d140f" stroke-width="3"/>`;
+  if (glow > .02) s += `<circle cx="236" cy="22" r="${40 + glow * 90}" fill="url(#gl)" opacity="${glow}"/>`;
+  s += `</g>`;
+  // шам
+  const fl = 1 + Math.sin(t * 17) * .08 + Math.sin(t * 31) * .05;
+  s += `<circle cx="905" cy="1300" r="${170 * fl}" fill="url(#lampg)"/>`;
+  s += `<path d="M860 1400 Q905 1370 950 1400 L935 1420 L875 1420Z" fill="#c9a24a" stroke="#1d140f" stroke-width="5"/>`;
+  s += `<path d="M877 1395 Q873 1320 905 1300 Q937 1320 933 1395Z" fill="#fff2c0" opacity=".55" stroke="#1d140f" stroke-width="5"/>`;
+  s += `<path d="M905 ${1372 - 26 * fl} Q893 1360 905 1376 Q917 1360 905 ${1372 - 26 * fl}Z" fill="#ffb02e"/>`;
+  return s;
+}
+const DEFS = `<defs><radialGradient id="lampg"><stop offset="0" stop-color="#ffd27a" stop-opacity=".55"/><stop offset="1" stop-color="#ffb040" stop-opacity="0"/></radialGradient>
+<radialGradient id="gl"><stop offset="0" stop-color="#7ffff0" stop-opacity=".9"/><stop offset=".4" stop-color="#39e0d0" stop-opacity=".35"/><stop offset="1" stop-color="#39e0d0" stop-opacity="0"/></radialGradient>
+<radialGradient id="vig"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".55"/></radialGradient></defs>`;
+
+function sparkles(t, cx, cy, n, spread, k) {
+  let s = '';
+  for (let i = 0; i < n; i++) {
+    const a = i * 2.39996, r = ((t * 60 * (0.4 + (i % 5) * .15) + i * 37) % spread);
+    const x = cx + Math.cos(a) * r * .8, y = cy - r * 1.1 + Math.sin(a) * 20;
+    const sz = (6 + (i % 4) * 3) * (1 - r / spread) * k;
+    if (sz <= .5) continue;
+    s += `<path transform="translate(${x.toFixed(1)} ${y.toFixed(1)})" d="M0 ${-sz * 2} L${sz * .5} ${-sz * .5} L${sz * 2} 0 L${sz * .5} ${sz * .5} L0 ${sz * 2} L${-sz * .5} ${sz * .5} L${-sz * 2} 0 L${-sz * .5} ${-sz * .5}Z" fill="#c8fff7" opacity="${(1 - r / spread).toFixed(2)}"/>`;
+  }
+  return s;
+}
+
+function bigMap(t, k) {   // жақын план: карта
+  const glow = ease((t - 0.3) / 1.2);
+  let s = `<rect width="1080" height="1920" fill="#3a2414"/>`;
+  s += `<g transform="translate(540 960) rotate(${-4 + t * 1.5}) scale(${1.05 + t * .03})">`;
+  s += `<path d="M-470 -640 L470 -660 L500 640 L-500 660Z" fill="#e8d098" stroke="#1d140f" stroke-width="10" stroke-linejoin="round"/>`;
+  s += `<path d="M-470 -640 L470 -660 L500 640 L-500 660Z" fill="none" stroke="#c9a868" stroke-width="40" opacity=".5"/>`;
+  // таулар, өзен, ағаштар
+  for (const [x, y, sc] of [[-260, -250, 1.3], [-120, -300, 1], [60, -230, 1.5], [230, -320, 1.1]])
+    s += `<path transform="translate(${x} ${y}) scale(${sc})" d="M-80 60 L0 -60 L80 60Z" fill="#c9a868" stroke="#6a4a22" stroke-width="7" stroke-linejoin="round"/><path transform="translate(${x} ${y}) scale(${sc})" d="M-22 -27 L0 -60 L22 -27 L8 -20 L0 -30 L-10 -18Z" fill="#f6efe0"/>`;
+  s += `<path d="M-460 250 C-250 120 -150 380 40 250 S 320 120 480 230" fill="none" stroke="#4a86b8" stroke-width="20" stroke-linecap="round"/>`;
+  for (const [x, y] of [[-330, 60], [-250, 90], [-300, 140], [300, 420], [360, 380], [-380, 470]])
+    s += `<path transform="translate(${x} ${y})" d="M0 -40 L26 10 L-26 10Z" fill="#6c8a3c" stroke="#4a3a1a" stroke-width="5"/>`;
+  s += `<path d="M-380 520 C-200 420 -80 560 120 420 S 260 80 160 -40" fill="none" stroke="#8a3a22" stroke-width="7" stroke-dasharray="22 18"/>`;
+  // белгі: шеңбер ішінде тау
+  const gx = 170, gy = -60;
+  if (glow > 0) s += `<circle cx="${gx}" cy="${gy}" r="${120 + glow * 260}" fill="url(#gl)" opacity="${glow}"/>`;
+  s += `<circle cx="${gx}" cy="${gy}" r="62" fill="${glow > .1 ? '#bffff6' : '#e8d098'}" stroke="${glow > .1 ? '#19b8a8' : '#6a4a22'}" stroke-width="10"/>`;
+  s += `<path d="M${gx - 38} ${gy + 26} L${gx} ${gy - 34} L${gx + 38} ${gy + 26}Z" fill="${glow > .1 ? '#39e0d0' : '#c9a868'}" stroke="${glow > .1 ? '#19b8a8' : '#6a4a22'}" stroke-width="8" stroke-linejoin="round"/>`;
+  s += sparkles(t, gx, gy, 26, 360, glow);
+  // саусақ
+  const fx = lerp(520, 260, ease(t / 1.0)), fy = lerp(560, 40, ease(t / 1.0));
+  s += `<g transform="translate(${fx} ${fy}) rotate(-35)"><rect x="-34" y="0" width="68" height="420" rx="34" fill="#3d8a52" stroke="#1d140f" stroke-width="8"/><rect x="-26" y="-60" width="52" height="110" rx="26" fill="#eab68c" stroke="#1d140f" stroke-width="8"/></g>`;
+  s += `</g>`;
+  return s;
+}
+
+// ----- кадрлар -----
+// камера: [фокус x, y, масштаб] — фон мен кейіпкерлер бірге кадрланады
+function shot(t) {
+  if (t < 3.4) return { cam: [540, 1180, lerp(1.12, 1.2, t / 3.4)], kind: 'room' };
+  if (t < 8.9) { const k = (t - 3.4) / 5.5; return { cam: [lerp(620, 650, k), 1330, lerp(1.45, 1.55, k)], kind: 'room' }; }
+  if (t < 11.6) { const k = (t - 8.9) / 2.7; return { cam: [lerp(420, 440, k), 1360, lerp(1.6, 1.75, k)], kind: 'room' }; }
+  if (t < 13.4) return { kind: 'map', lt: t - 11.6 };
+  const k = (t - 13.4) / 1.6; return { cam: [560, 1320, lerp(1.35, 1.28, k)], kind: 'room', glowAll: 1 };
+}
+
+function people(t, glowAll) {
+  const kTalk = talk(t, .7, 3.3) || talk(t, 9.1, 11.6);
+  const fTalk = talk(t, 3.6, 8.9);
+  let kEmo = t < 3.4 ? 'talk' : t < 8.9 ? 'calm' : t < 9.4 ? 'surprised' : 'joy';
+  if (t > 13.4) kEmo = 'amazed';
+  if (t > 9.4 && t < 11.6) kEmo = kTalk > .3 ? 'happy' : 'surprised';
+  const fEmo = t < 3.4 ? 'calm' : t < 8.9 ? (t > 6.2 ? 'thinking' : 'happy') : 'surprised';
+  const kArm = 10;
+  let s = '';
+  // әке (оң жақта)
+  s += P('father', 760, 1830, 2.1, { emotion: fEmo, mouth: fTalk, blink: blink(t, .3), look: t < 3.4 ? -.9 : (t > 8.9 ? -.4 : -.6), lookY: t > 6.2 && t < 8.9 ? .9 : 0, tilt: t > 3.4 && t < 8.9 ? -4 + Math.sin(t * 1.3) * 2 : 0, armL: 12, armR: 10 });
+  // Қаныш (сол жақта)
+  s += P('kanysh', 360, 1790, 2.4, { emotion: kEmo, mouth: kTalk, blink: blink(t, 1.9), look: t < 3.4 ? .9 : (t > 8.9 ? .2 : .8), lookY: t > 9 ? .8 : 0, tilt: t < 3.4 ? 6 : (t > 8.9 ? Math.sin(t * 5) * 2 : 3), armR: kArm, bob: t > 9.2 && t < 9.9 ? -Math.abs(Math.sin((t - 9.2) * 9)) * 18 : 0 });
+  return s;
+}
+
+window.renderFrame = (t) => {
+  const sh = shot(t);
+  let fgS = DEFS, uiS = '';
+  if (sh.kind === 'room') {
+    const [fx, fy, z] = sh.cam;
+    const vw = W / z, vh = H / z, vx = clamp(fx - vw / 2, 0, W - vw), vy = clamp(fy - vh / 2, 0, H - vh);
+    room.cam.setViewOffset(W, H, vx, vy, vw, vh);
+    room.update(t); R.render(room.scene, room.cam);
+    fg.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`);
+    const glow = t > 9.0 ? ease((t - 9.0) / .6) : 0;
+    fgS += people(t, sh.glowAll);
+    fgS += table(t, glow);
+    if (glow > 0) fgS += `<circle cx="536" cy="1424" r="${300 + Math.sin(t * 6) * 20}" fill="url(#gl)" opacity="${glow * .7}"/>` + sparkles(t, 536, 1410, 22, 420, glow);
+    fgS += `<rect x="${vx}" y="${vy}" width="${vw}" height="${vh}" fill="url(#vig)"/>`;
+  } else {
+    fg.setAttribute('viewBox', '0 0 1080 1920');
+    fgS += bigMap(sh.lt);
+  }
+  fg.innerHTML = fgS;
+  // атау
+  if (t < 3.0) {
+    const a = ease(t / .5) * (1 - ease((t - 2.4) / .6));
+    uiS += `<g opacity="${a.toFixed(3)}" transform="translate(540 ${300 - 20 * (1 - ease(t / .6))})"><text text-anchor="middle" font-size="62" font-weight="900" fill="#ffd36a" stroke="#1d140f" stroke-width="12" paint-order="stroke" letter-spacing="2">КІШКЕНТАЙ</text><text y="82" text-anchor="middle" font-size="62" font-weight="900" fill="#fff" stroke="#1d140f" stroke-width="12" paint-order="stroke" letter-spacing="2">ҚАНЫШТЫҢ ҚҰПИЯСЫ</text></g>`;
+  }
+  // субтитр
+  for (const [a, b, txt] of SUBS) if (t >= a && t < b) {
+    const words = txt.split(' '); const lines = []; let cur = '';
+    for (const w of words) { if ((cur + ' ' + w).trim().length > 24) { lines.push(cur.trim()); cur = w; } else cur += ' ' + w; }
+    lines.push(cur.trim());
+    const fs = 54, lh = 70, y0 = 1600 - (lines.length - 1) * lh;
+    lines.forEach((l, i) => { uiS += `<text x="540" y="${y0 + i * lh}" text-anchor="middle" font-size="${fs}" font-weight="800" fill="#fff" stroke="#1d140f" stroke-width="11" paint-order="stroke" stroke-linejoin="round">${l}</text>`; });
+  }
+  // басы/соңы қараңғы
+  const fade = Math.max(1 - t / .4, ease((t - (TOTAL - .5)) / .5));
+  if (fade > 0) uiS += `<rect width="1080" height="1920" fill="#000" opacity="${fade.toFixed(3)}"/>`;
+  ui.innerHTML = uiS;
+  return true;
+};
+window.TOTAL = TOTAL;
+window.READY = true;
+</script></body></html>
