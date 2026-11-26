@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Ару Жасау — қыз жасауы, сандық, бесік | Атырау</title>
-<meta name="description" content="Соңғы үлгідегі қыз жасауы, сандық, бесік, үстел мен орындықтар. Атырау, Дина базар. Kaspi Red, Kaspi Kredit арқылы бөліп төлеу.">
+<title>Ару Жасау — қыз жасауы, сандық, мебель | Атырау</title>
+<meta name="description" content="Соңғы үлгідегі қыз жасауы, сандық, үстел мен орындықтар. Атырау, Дина базары, Алаша сауда үйі. Kaspi Red, Kaspi Kredit арқылы бөліп төлеу.">
 <meta name="theme-color" content="#FAF6F0">
 <meta property="og:title" content="Ару Жасау — қыз жасауы | Атырау">
-<meta property="og:description" content="Соңғы үлгідегі қыз жасауы, сандық, бесік, мебель. Kaspi Red бар.">
+<meta property="og:description" content="Соңғы үлгідегі қыз жасауы, сандық, мебель. Kaspi Red бар.">
 <meta property="og:image" content="hero.jpg">
 <link rel="icon" href="logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -68,6 +68,10 @@
   .cat .t{position:absolute;left:0;right:0;bottom:0;padding:34px 14px 14px;color:#fff;background:linear-gradient(transparent,rgba(40,30,20,.65))}
   .cat .t b{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:22px;display:block;line-height:1.1}
   .cat .t small{font-size:11px;opacity:.9}
+  .cat.wide{grid-column:1/-1}
+  .cat.wide img{aspect-ratio:16/9;object-position:50% 60%}
+  .hours{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-radius:14px;background:var(--soft);margin-bottom:16px;font-size:13px;color:#7A6448}
+  .hours b{font-size:15px;color:var(--ink)}
   .cat.plain{display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:18px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
   .cat.plain b{font-family:"Cormorant Garamond",serif;font-weight:600;font-size:22px}
   .cat.plain small{font-size:12px;color:var(--muted);margin-top:4px}
@@ -131,10 +135,10 @@
 
 <header class="hero">
   <div class="wrap">
-    <div class="pic rv"><img src="hero.jpg" alt="Қыз жасауы: көрпелер, жастықтар, сандық"><span class="tagline">Атырау · Дина базар</span></div>
+    <div class="pic rv"><img src="hero.jpg" alt="Қыз жасауы: көрпелер, жастықтар, сандық"><span class="tagline">Атырау · Дина базары</span></div>
     <div class="kicker rv" style="justify-content:center">Соңғы үлгідегі</div>
     <h1 class="rv">Қызыңызға <i>ең әдемі</i> жасау</h1>
-    <p class="rv">Көрпе, жастық, сандық, бесік, үстел мен орындықтар. Бәрін бір жерден таңдап, толық жиынтық жасаймыз.</p>
+    <p class="rv">Көрпе, жастық, сандық, үстел мен орындықтар. Бәрін бір жерден таңдап, толық жиынтық жасаймыз.</p>
     <a class="btn rv" href="https://wa.me/77750401414?text=%D0%A1%D3%99%D0%BB%D0%B5%D0%BC%D0%B5%D1%82%D1%81%D1%96%D0%B7%20%D0%B1%D0%B5!%20%D0%A1%D0%B0%D0%B9%D1%82%D1%82%D0%B0%D0%BD%20%D0%B6%D0%B0%D0%B7%D1%8B%D0%BF%20%D0%BE%D1%82%D1%8B%D1%80%D0%BC%D1%8B%D0%BD.%20%D2%9A%D1%8B%D0%B7%20%D0%B6%D0%B0%D1%81%D0%B0%D1%83%D1%8B%20%D1%82%D1%83%D1%80%D0%B0%D0%BB%D1%8B%20%D0%B1%D1%96%D0%BB%D0%B3%D1%96%D0%BC%20%D0%BA%D0%B5%D0%BB%D0%B5%D0%B4%D1%96."><svg><use href="#wa"/></svg>WhatsApp-қа жазу</a>
     <a class="btn ghost rv" href="#catalog">Үлгілерді көру</a>
     <div class="feats">
@@ -153,8 +157,7 @@
     <div class="cats">
       <a class="cat rv" href="#zhasau"><img src="blue.jpg" alt="Көрпелер"><div class="t"><b>Қыз жасауы</b><small>көрпе, жастық, жиынтық</small></div></a>
       <a class="cat rv" href="#zhasau"><img src="sandyk.jpg" alt="Сандық" style="object-position:50% 80%"><div class="t"><b>Сандық</b><small>жасауға арналған</small></div></a>
-      <a class="cat rv" href="#mebel"><img src="table3.jpg" alt="Үстел мен орындықтар"><div class="t"><b>Үстел, орындық</b><small>қонақ бөлмеге</small></div></a>
-      <a class="cat plain rv" href="#contact"><svg class="orn" width="90" height="16"><use href="#orn"/></svg><b style="margin-top:10px">Бесік</b><small>WhatsApp-та үлгілерін жібереміз</small></a>
+      <a class="cat wide rv" href="#mebel"><img src="table3.jpg" alt="Үстел мен орындықтар"><div class="t"><b>Үстел, орындық</b><small>қонақ бөлмеге</small></div></a>
     </div>
   </div>
 </section>
@@ -206,7 +209,7 @@
   <div class="wrap">
     <div class="kicker rv">Қалай тапсырыс беруге болады</div>
     <h2 class="rv">Үш <i>қадам</i></h2>
-    <div class="step rv"><div class="n">1</div><div><h3>WhatsApp-қа жазыңыз</h3><p>Не керек екенін айтыңыз: жасау, сандық, бесік немесе мебель.</p></div></div>
+    <div class="step rv"><div class="n">1</div><div><h3>WhatsApp-қа жазыңыз</h3><p>Не керек екенін айтыңыз: жасау, сандық немесе мебель.</p></div></div>
     <div class="step rv"><div class="n">2</div><div><h3>Үлгіні таңдаңыз</h3><p>Суреттерін жібереміз немесе дүкенге келіп өз көзіңізбен көріңіз.</p></div></div>
     <div class="step rv"><div class="n">3</div><div><h3>Ыңғайлы төлеңіз</h3><p>Kaspi QR, Kaspi Red немесе Kaspi Kredit арқылы.</p></div></div>
   </div>
@@ -218,8 +221,9 @@
       <img src="shelves.jpg" alt="Дүкен" loading="lazy" style="object-position:50% 30%">
       <div class="in">
         <div class="kicker">Мекенжай</div>
-        <h3>Дина базар, Алаша, 5 бутик</h3>
+        <h3>Дина базары, Алаша сауда үйі, 5 бутик</h3>
         <p>Атырау қаласы. Келіп, барлық үлгіні қолмен ұстап көріңіз.</p>
+        <div class="hours"><span>Жұмыс уақыты</span><b>10:00 – 19:00</b></div>
         <a class="btn ghost" style="margin-top:0" href="https://2gis.kz/atyrau/search/%D0%94%D0%B8%D0%BD%D0%B0%20%D0%B1%D0%B0%D0%B7%D0%B0%D1%80">📍 2GIS-те ашу</a>
       </div>
     </div>
@@ -242,7 +246,7 @@
 <footer>
   <svg class="orn" width="120" height="20"><use href="#orn"/></svg>
   <span class="serif">Ару Жасау</span>
-  Қыз жасауы · Сандық · Бесік · Атырау
+  Қыз жасауы · Сандық · Мебель · Атырау
 </footer>
 
 <div class="bar"><div class="wrap"><a class="btn" href="https://wa.me/77750401414?text=%D0%A1%D3%99%D0%BB%D0%B5%D0%BC%D0%B5%D1%82%D1%81%D1%96%D0%B7%20%D0%B1%D0%B5!%20%D0%A1%D0%B0%D0%B9%D1%82%D1%82%D0%B0%D0%BD%20%D0%B6%D0%B0%D0%B7%D1%8B%D0%BF%20%D0%BE%D1%82%D1%8B%D1%80%D0%BC%D1%8B%D0%BD."><svg><use href="#wa"/></svg>WhatsApp-қа жазу</a></div></div>
