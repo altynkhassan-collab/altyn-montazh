@@ -17,8 +17,8 @@ voice = voice / max(1e-6, np.abs(voice).max()) * .9
 music = k.synth_music(T)[:len(voice)]; music = np.pad(music, (0, len(voice) - len(music)))
 # дауыс конверті бойынша музыканы басу
 win = int(.3 * SR); env = np.convolve(np.abs(voice), np.ones(win) / win, mode='same')
-duck = 1 - .55 * np.clip(env / (np.percentile(env[env > 0], 60) + 1e-6), 0, 1)
-mix = voice + music * .32 * duck
+duck = 1 - .65 * np.clip(env / (np.percentile(env[env > 0], 60) + 1e-6), 0, 1)
+mix = voice + music * .15 * duck
 fd = int(1.5 * SR); e = int(T * SR); mix[e - fd:e] *= np.linspace(1, .0, fd) ** .5 if False else 1
 mix = mix[:int(T * SR)]
 mix = mix / max(1e-6, np.abs(mix).max()) * .95
