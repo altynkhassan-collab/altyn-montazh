@@ -1,0 +1,12 @@
+<!doctype html><html><head><meta charset="utf-8"><style>@font-face{font-family:M;src:url(Montserrat.ttf)}html,body{margin:0;background:#f6efe0;font-family:M}</style><script src="chars.js"></script></head><body>
+<div id="stage" style="width:1800px;height:1500px"><svg id="s" width="1800" height="1500"></svg></div>
+<script>
+let s=`<rect width="1800" height="1500" fill="#f6efe0"/><text x="900" y="70" text-anchor="middle" font-size="50" font-weight="800" fill="#3a2a1a">Фото → мульт кейіпкер</text>`;
+const cols=[['ph_boy.jpg','kanysh','Қаныш (бала)',2.3,{emotion:'happy'}],['ph_dad.jpg','father','Әкесі',1.6,{emotion:'calm'}],['ph_mom.jpg','mother','Анасы',1.6,{emotion:'happy'}]];
+cols.forEach(([ph,id,l,sc,st],i)=>{const x=300+i*600;
+ s+=`<clipPath id="c${i}"><rect x="${x-180}" y="110" width="360" height="420" rx="20"/></clipPath><image href="${ph}" x="${x-180}" y="110" width="360" height="420" preserveAspectRatio="xMidYMid slice" clip-path="url(#c${i})"/>`;
+ s+=`<text x="${x}" y="590" text-anchor="middle" font-size="60" fill="#3a2a1a">↓</text>`;
+ s+=CH.place(id,x,1380,sc,st);
+ s+=`<text x="${x}" y="1460" text-anchor="middle" font-size="40" font-weight="800" fill="#3a2a1a">${l}</text>`;});
+document.getElementById('s').innerHTML=s; window.READY=true; window.renderFrame=()=>true;
+</script></body></html>

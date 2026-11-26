@@ -36,8 +36,16 @@
         s += `<ellipse cx="${f(x)}" cy="${f(ey)}" rx="${f(erx * k)}" ry="${f(ry)}" fill="#fff" stroke="${OL}" stroke-width="${SW - 1}"/>`;
         const pr = erx * (e === 'surprised' ? .45 : .62);
         const px = x + look * erx * .45, py = ey + lookY * ry * .4 + ry * .08;
-        s += `<circle cx="${f(px)}" cy="${f(py)}" r="${f(Math.min(pr, ry * .8))}" fill="${OL}"/>`;
-        s += `<circle cx="${f(px + pr * .35)}" cy="${f(py - pr * .4)}" r="${f(pr * .3)}" fill="#fff"/>`;
+        if (opt.iris) {
+          const ir = Math.min(pr * 1.25, ry * .92);
+          s += `<circle cx="${f(px)}" cy="${f(py)}" r="${f(ir)}" fill="${opt.iris}"/><circle cx="${f(px)}" cy="${f(py)}" r="${f(ir * .5)}" fill="#160d08"/>`;
+          s += `<circle cx="${f(px + ir * .35)}" cy="${f(py - ir * .4)}" r="${f(ir * .28)}" fill="#fff"/>`;
+        } else {
+          s += `<circle cx="${f(px)}" cy="${f(py)}" r="${f(Math.min(pr, ry * .8))}" fill="${OL}"/>`;
+          s += `<circle cx="${f(px + pr * .35)}" cy="${f(py - pr * .4)}" r="${f(pr * .3)}" fill="#fff"/>`;
+        }
+        if (opt.lid) s += `<path d="M${f(x - erx * k * 1.05)} ${f(ey - ry * .05)} Q${f(x)} ${f(ey - ry * 1.35)} ${f(x + erx * k * 1.05)} ${f(ey - ry * .05)}" fill="none" stroke="${OL}" stroke-width="${opt.lashes ? SW + 2 : SW}" stroke-linecap="round"/>`;
+        if (opt.lashes) { const side = x < cx ? -1 : 1; s += `<path d="M${f(x + side * erx * k)} ${f(ey - ry * .2)} l${f(side * erx * .35)} ${f(-ry * .35)}" stroke="${OL}" stroke-width="${SW}" stroke-linecap="round"/>`; }
       }
     }
     // қас
@@ -120,7 +128,7 @@
     const hx = 0, hy = shY - R * .82;
     s += `<g transform="rotate(${tilt} ${hx} ${f(hy + R)})">`;
     if (c.backHead) s += c.backHead(hx, hy, R);
-    s += `<circle cx="${hx}" cy="${f(hy)}" r="${R}" fill="${c.skin}" stroke="${OL}" stroke-width="${SW}"/>`;
+    s += c.headPath ? c.headPath(hx, hy, R) : `<ellipse cx="${hx}" cy="${f(hy)}" rx="${R}" ry="${f(R * (c.headRy || 1))}" fill="${c.skin}" stroke="${OL}" stroke-width="${SW}"/>`;
     // құлақ
     for (const side of [-1, 1]) if (!c.noEars)
       s += `<ellipse cx="${f(hx + side * R * .97)}" cy="${f(hy + R * .08)}" rx="${f(R * .13)}" ry="${f(R * .18)}" fill="${c.skin}" stroke="${OL}" stroke-width="${SW - 1}"/>`;
@@ -216,50 +224,84 @@
   };
 
 
-  // ===== Клиенттің отбасы: бет-әлпеті фотоға ұқсатылған =====
-  C.kanysh_old = Object.assign({}, C.kanysh); C.father_old = Object.assign({}, C.father); C.mother_old = Object.assign({}, C.mother);
-  // Бала: қалың қара шаш, маңдайына түскен кекіл, қоңырқай тері
-  C.kanysh.skin = '#e2a97c';
-  C.kanysh.faceOpt = { eyeRy: .23 };
-  C.kanysh.frontHead = (x, y, R) =>
-    `<path d="M${f(x - R * 1.0)} ${f(y + R * .05)} Q${f(x - R * 1.08)} ${f(y - R * 1.0)} ${f(x - R * .2)} ${f(y - R * 1.12)} Q${f(x + R * .9)} ${f(y - R * 1.15)} ${f(x + R * 1.02)} ${f(y - R * .1)} L${f(x + R * .9)} ${f(y - R * .2)} L${f(x + R * .8)} ${f(y - R * .42)} L${f(x + R * .55)} ${f(y - R * .36)} L${f(x + R * .38)} ${f(y - R * .5)} L${f(x + R * .15)} ${f(y - R * .34)} L${f(x - R * .08)} ${f(y - R * .5)} L${f(x - R * .3)} ${f(y - R * .34)} L${f(x - R * .52)} ${f(y - R * .48)} L${f(x - R * .72)} ${f(y - R * .3)} L${f(x - R * .88)} ${f(y - R * .4)} L${f(x - R * .92)} ${f(y - R * .05)}Z" fill="#17141a" stroke="${OL}" stroke-width="4" stroke-linejoin="round"/>` +
-    `<path d="M${f(x - R * .5)} ${f(y - R * .95)} q${f(R * .15)} ${f(-R * .12)} ${f(R * .3)} ${f(-R * .02)} M${f(x + R * .05)} ${f(y - R * .98)} q${f(R * .15)} ${f(-R * .1)} ${f(R * .3)} ${f(R * .02)}" fill="none" stroke="#4a4458" stroke-width="4" stroke-linecap="round"/>`;
-  // Әкесі: қысқа ақ шаш, биік маңдай, қара тікбұрышты көзілдірік, ақшыл сақал-мұрт іздері
-  C.father.skin = '#e9b892';
-  C.father.faceOpt = { eyeRy: .22, browColor: '#6a6a66' };
+  // ===== Клиенттің отбасы (ChatGPT суреттеріне қарап) =====
+  const GOLD = '#d3a64e', GOLDD = '#8a6424';
+  // алтын оюлы жиек: (x1,y1)→(x2,y2) бойымен
+  function trim(x1, y1, x2, y2, w, col = GOLD, bg = null) {
+    const L = Math.hypot(x2 - x1, y2 - y1), a = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+    let s = `<g transform="translate(${f(x1)} ${f(y1)}) rotate(${f(a)})">`;
+    if (bg) s += `<rect x="0" y="${f(-w / 2)}" width="${f(L)}" height="${f(w)}" fill="${bg}"/>`;
+    s += `<path d="M0 ${f(-w / 2)} L${f(L)} ${f(-w / 2)} M0 ${f(w / 2)} L${f(L)} ${f(w / 2)}" stroke="${col}" stroke-width="${f(Math.max(2, w * .14))}"/>`;
+    const n = Math.max(1, Math.round(L / (w * 1.1)));
+    for (let i = 0; i < n; i++) {
+      const cx = (i + .5) * L / n, r = w * .26, d = i % 2 ? 1 : -1;
+      s += `<path d="M${f(cx - r * 1.6)} 0 C${f(cx - r * 1.6)} ${f(d * r * 1.4)} ${f(cx)} ${f(d * r * 1.4)} ${f(cx)} 0 S${f(cx + r * 1.6)} ${f(-d * r * 1.4)} ${f(cx + r * 1.6)} 0" fill="none" stroke="${col}" stroke-width="${f(Math.max(1.6, w * .12))}" stroke-linecap="round"/>`;
+    }
+    return s + '</g>';
+  }
+  const belt = (bw, y, buckle = '#c9a24a') => `<rect x="${f(-bw * .5)}" y="${f(y)}" width="${f(bw)}" height="14" rx="4" fill="#5a341c" stroke="${OL}" stroke-width="4"/><rect x="-11" y="${f(y - 3)}" width="22" height="20" rx="3" fill="none" stroke="${buckle}" stroke-width="5"/><path d="M14 ${f(y + 12)} l8 34 l10 -2 l-6 -30" fill="#5a341c" stroke="${OL}" stroke-width="3"/>`;
+
+  // --- Бала ---
+  Object.assign(C.kanysh, {
+    skin: '#e8b08a', coat: '#2f4a36', trousers: '#6a4428', boots: '#7a4e2c', coatLen: 34, flare: .62,
+    faceOpt: { iris: '#4a2c1a', eyeRx: .19, eyeRy: .21, lid: true },
+    headRy: 1.04,
+    bodyDeco: (c, shY, hipY, hem, bw, hw) =>
+      `<path d="M${f(-bw * .16)} ${f(shY - 6)} L0 ${f(shY + 16)} L${f(bw * .16)} ${f(shY - 6)}Z" fill="#e8dcc4" stroke="${OL}" stroke-width="3"/>` +
+      trim(0, shY - 4, 0, hem + 2, 12) + trim(-bw * .2, shY - 6, -bw * .02, shY + 14, 9) + trim(bw * .2, shY - 6, bw * .02, shY + 14, 9) +
+      trim(-hw + 4, hem - 6, hw - 4, hem - 6, 11) + belt(bw, hipY - 26),
+    frontHead: (x, y, R) =>
+      // қалың қара шаш: үсті тікірейген, кекілі маңдайда
+      `<path d="M${f(x - R * .98)} ${f(y + R * .12)} Q${f(x - R * 1.1)} ${f(y - R * .9)} ${f(x - R * .5)} ${f(y - R * 1.12)} Q${f(x - R * .32)} ${f(y - R * 1.2)} ${f(x - R * .15)} ${f(y - R * 1.13)} Q${f(x + R * .05)} ${f(y - R * 1.22)} ${f(x + R * .22)} ${f(y - R * 1.12)} Q${f(x + R * .42)} ${f(y - R * 1.16)} ${f(x + R * .5)} ${f(y - R * 1.08)} L${f(x + R * .55)} ${f(y - R * 1.02)} Q${f(x + R * 1.08)} ${f(y - R * .85)} ${f(x + R * .98)} ${f(y + R * .1)} L${f(x + R * .88)} ${f(y - R * .25)} L${f(x + R * .7)} ${f(y - R * .38)} L${f(x + R * .5)} ${f(y - R * .28)} L${f(x + R * .32)} ${f(y - R * .44)} L${f(x + R * .1)} ${f(y - R * .3)} L${f(x - R * .12)} ${f(y - R * .46)} L${f(x - R * .34)} ${f(y - R * .3)} L${f(x - R * .55)} ${f(y - R * .45)} L${f(x - R * .74)} ${f(y - R * .3)} L${f(x - R * .88)} ${f(y - R * .36)}Z" fill="#171319" stroke="${OL}" stroke-width="4" stroke-linejoin="round"/>` +
+      `<path d="M${f(x - R * .45)} ${f(y - R * .95)} q${f(R * .2)} ${f(-R * .1)} ${f(R * .35)} 0 M${f(x + R * .1)} ${f(y - R * .98)} q${f(R * .18)} ${f(-R * .08)} ${f(R * .32)} ${f(R * .03)}" fill="none" stroke="#4a4458" stroke-width="4" stroke-linecap="round"/>`,
+  });
+  // --- Әкесі ---
+  Object.assign(C.father, {
+    skin: '#ecbf9a', coat: '#5e3a22', trousers: '#3a2a20', boots: '#4a3020', coatLen: 70, flare: .66,
+    faceOpt: { iris: '#4a2c1a', eyeRx: .17, eyeRy: .17, lid: true, browColor: '#3a3632' },
+    headRy: 1.12,
+    bodyDeco: (c, shY, hipY, hem, bw, hw) =>
+      `<path d="M${f(-bw * .15)} ${f(shY - 6)} L0 ${f(shY + 26)} L${f(bw * .15)} ${f(shY - 6)}Z" fill="#efe8dc" stroke="${OL}" stroke-width="3"/>` +
+      trim(-bw * .17, shY - 6, -hw * .1, hem + 4, 14) + trim(bw * .17, shY - 6, hw * .1, hem + 4, 14) +
+      trim(-hw + 6, hem - 8, hw - 6, hem - 8, 14) + belt(bw, hipY - 40),
+  });
   C.father.frontHead = (x, y, R) => {
     let s = '';
-    // шаш: ақ, қысқа; маңдай биік (шаш сызығы шегінген)
-    const r = R * 1.07;
-    s += `<path d="M${f(x - r)} ${f(y + R * .05)} A${f(r)} ${f(r)} 0 0 1 ${f(x + r)} ${f(y + R * .05)} L${f(x + R * .93)} ${f(y - R * .05)} Q${f(x + R * .84)} ${f(y - R * .42)} ${f(x + R * .58)} ${f(y - R * .5)} Q${f(x + R * .32)} ${f(y - R * .48)} ${f(x + R * .2)} ${f(y - R * .58)} Q${f(x)} ${f(y - R * .66)} ${f(x - R * .2)} ${f(y - R * .58)} Q${f(x - R * .32)} ${f(y - R * .48)} ${f(x - R * .58)} ${f(y - R * .5)} Q${f(x - R * .84)} ${f(y - R * .42)} ${f(x - R * .93)} ${f(y - R * .05)}Z" fill="#cfcec8" stroke="${OL}" stroke-width="4" stroke-linejoin="round"/>`;
-    s += `<path d="M${f(x - R * .5)} ${f(y - R * .88)} q${f(R * .2)} ${f(-R * .08)} ${f(R * .35)} ${f(R * .02)} M${f(x + R * .1)} ${f(y - R * .9)} q${f(R * .2)} ${f(-R * .06)} ${f(R * .35)} ${f(R * .05)}" fill="none" stroke="#9e9d96" stroke-width="4" stroke-linecap="round"/>`;
-    // қырынған сақал-мұрт (ақшыл көлеңке)
-    s += `<path d="M${f(x - R * .72)} ${f(y + R * .3)} Q${f(x - R * .6)} ${f(y + R * 1.0)} ${f(x)} ${f(y + R * 1.02)} Q${f(x + R * .6)} ${f(y + R * 1.0)} ${f(x + R * .72)} ${f(y + R * .3)} Q${f(x + R * .5)} ${f(y + R * .7)} ${f(x)} ${f(y + R * .7)} Q${f(x - R * .5)} ${f(y + R * .7)} ${f(x - R * .72)} ${f(y + R * .3)}Z" fill="#9a9590" opacity=".3"/>`;
-    s += `<path d="M${f(x - R * .34)} ${f(y + R * .44)} Q${f(x)} ${f(y + R * .36)} ${f(x + R * .34)} ${f(y + R * .44)}" fill="none" stroke="#9a9590" stroke-width="${f(R * .09)}" stroke-linecap="round" opacity=".45"/>`;
-    // көзілдірік
-    const ex = R * .9 * .36, ey = y + R * .06 - R * .9 * .02, gw = R * .3, gh = R * .23;
-    for (const sd of [-1, 1]) s += `<rect x="${f(x + sd * ex - gw)}" y="${f(ey - gh)}" width="${f(gw * 2)}" height="${f(gh * 2)}" rx="${f(R * .05)}" fill="#ffffff" fill-opacity=".12" stroke="#151515" stroke-width="${f(R * .085)}"/>`;
-    s += `<path d="M${f(x - ex + gw)} ${f(ey - gh * .3)} Q${f(x)} ${f(ey - gh * .6)} ${f(x + ex - gw)} ${f(ey - gh * .3)}" fill="none" stroke="#151515" stroke-width="${f(R * .07)}"/>`;
-    s += `<path d="M${f(x - ex - gw)} ${f(ey - gh * .4)} L${f(x - R * .97)} ${f(ey - gh * .6)} M${f(x + ex + gw)} ${f(ey - gh * .4)} L${f(x + R * .97)} ${f(ey - gh * .6)}" stroke="#151515" stroke-width="${f(R * .07)}"/>`;
+    const r = R * 1.06;
+    s += `<path d="M${f(x - r)} ${f(y + R * .05)} A${f(r)} ${f(r * 1.08)} 0 0 1 ${f(x + r)} ${f(y + R * .05)} L${f(x + R * .93)} ${f(y - R * .05)} Q${f(x + R * .84)} ${f(y - R * .46)} ${f(x + R * .58)} ${f(y - R * .56)} Q${f(x + R * .32)} ${f(y - R * .54)} ${f(x + R * .2)} ${f(y - R * .66)} Q${f(x)} ${f(y - R * .74)} ${f(x - R * .2)} ${f(y - R * .66)} Q${f(x - R * .32)} ${f(y - R * .54)} ${f(x - R * .58)} ${f(y - R * .56)} Q${f(x - R * .84)} ${f(y - R * .46)} ${f(x - R * .93)} ${f(y - R * .05)}Z" fill="#bdbcb6" stroke="${OL}" stroke-width="4" stroke-linejoin="round"/>`;
+    s += `<path d="M${f(x - R * .74)} ${f(y + R * .32)} Q${f(x - R * .62)} ${f(y + R * 1.1)} ${f(x)} ${f(y + R * 1.12)} Q${f(x + R * .62)} ${f(y + R * 1.1)} ${f(x + R * .74)} ${f(y + R * .32)} Q${f(x + R * .5)} ${f(y + R * .74)} ${f(x)} ${f(y + R * .74)} Q${f(x - R * .5)} ${f(y + R * .74)} ${f(x - R * .74)} ${f(y + R * .32)}Z" fill="#8a8580" opacity=".28"/>`;
+    s += `<path d="M${f(x - R * .3)} ${f(y + R * .46)} Q${f(x)} ${f(y + R * .38)} ${f(x + R * .3)} ${f(y + R * .46)}" fill="none" stroke="#8a8580" stroke-width="${f(R * .1)}" stroke-linecap="round" opacity=".5"/>`;
+    const ex = R * .9 * .36, ey = y + R * .06 - R * .02, gw = R * .29, gh = R * .19;
+    for (const sd of [-1, 1]) s += `<rect x="${f(x + sd * ex - gw)}" y="${f(ey - gh)}" width="${f(gw * 2)}" height="${f(gh * 2)}" rx="${f(R * .04)}" fill="#ffffff" fill-opacity=".1" stroke="#141414" stroke-width="${f(R * .09)}"/>`;
+    s += `<path d="M${f(x - ex + gw)} ${f(ey - gh * .4)} L${f(x + ex - gw)} ${f(ey - gh * .4)}" stroke="#141414" stroke-width="${f(R * .07)}"/>`;
+    s += `<path d="M${f(x - ex - gw)} ${f(ey - gh * .5)} L${f(x - R * .98)} ${f(ey - gh * .6)} M${f(x + ex + gw)} ${f(ey - gh * .5)} L${f(x + R * .98)} ${f(ey - gh * .6)}" stroke="#141414" stroke-width="${f(R * .07)}"/>`;
     return s;
   };
-  // Анасы: қара шаш артқа жиналған (ортасынан фарқ), сырға, інжу алқа, қара көйлек
-  C.mother.skin = '#f0c6a2';
-  C.mother.noEars = false;
-  C.mother.coat = '#22202a'; C.mother.trousers = '#22202a';
-  C.mother.faceOpt = { eyeRy: .25 };
-  C.mother.backHead = (x, y, R) => `<circle cx="${f(x + R * .55)}" cy="${f(y - R * .62)}" r="${f(R * .42)}" fill="#18141a" stroke="${OL}" stroke-width="${SW}"/>`;
+  // --- Анасы ---
+  Object.assign(C.mother, {
+    skin: '#f2c9a6', coat: '#7e1626', trousers: '#7e1626', boots: '#3a2418', coatLen: 76, flare: .9,
+    noEars: false, headRy: 1.1, armW: 26,
+    faceOpt: { iris: '#4a2c1a', eyeRx: .2, eyeRy: .21, lid: true, lashes: true },
+    backHead: (x, y, R) => `<path d="M${f(x + R * .55)} ${f(y - R * .3)} Q${f(x + R * 1.25)} ${f(y + R * .2)} ${f(x + R * .75)} ${f(y + R * 1.05)}" fill="none" stroke="#17131a" stroke-width="${f(R * .32)}" stroke-linecap="round"/>`,
+    bodyDeco: (c, shY, hipY, hem, bw, hw) => {
+      let s = '';
+      // көк камзол
+      const ky = hipY - 6;
+      s += `<path d="M${f(-bw * .44)} ${f(shY + 6)} Q${f(-bw * .5)} ${f(shY - 4)} ${f(-bw * .18)} ${f(shY - 6)} L0 ${f(shY + 40)} L${f(bw * .18)} ${f(shY - 6)} Q${f(bw * .5)} ${f(shY - 4)} ${f(bw * .44)} ${f(shY + 6)} L${f(bw * .5)} ${f(ky)} Q0 ${f(ky + 14)} ${f(-bw * .5)} ${f(ky)}Z" fill="#1f2a5c" stroke="${OL}" stroke-width="4" stroke-linejoin="round"/>`;
+      s += `<path d="M${f(-bw * .1)} ${f(shY - 4)} L0 ${f(shY + 6)} L${f(bw * .1)} ${f(shY - 4)} L${f(bw * .1)} ${f(shY - 18)} L${f(-bw * .1)} ${f(shY - 18)}Z" fill="#7e1626" stroke="${OL}" stroke-width="3"/>` + trim(-bw * .1, shY - 12, bw * .1, shY - 12, 7);
+      s += trim(-bw * .17, shY - 4, -bw * .03, shY + 36, 7, '#d8dce6') + trim(bw * .17, shY - 4, bw * .03, shY + 36, 7, '#d8dce6');
+      s += trim(-bw * .46, ky - 6, bw * .46, ky - 6, 8, '#d8dce6');
+      for (let i = 0; i < 4; i++) s += `<circle cx="0" cy="${f(shY + 50 + i * 22)}" r="6" fill="#e6e8ee" stroke="${OL}" stroke-width="2"/>`;
+      s += trim(-hw + 8, hem - 14, hw - 8, hem - 14, 18) + trim(-hw + 4, hem - 2, hw - 4, hem - 2, 5);
+      return s;
+    },
+  });
   C.mother.frontHead = (x, y, R) =>
-    `<path d="M${f(x - R * .99)} ${f(y + R * .05)} Q${f(x - R * 1.06)} ${f(y - R * 1.0)} ${f(x)} ${f(y - R * 1.06)} Q${f(x + R * 1.06)} ${f(y - R * 1.0)} ${f(x + R * .99)} ${f(y + R * .05)} Q${f(x + R * .9)} ${f(y - R * .55)} ${f(x + R * .08)} ${f(y - R * .72)} L${f(x)} ${f(y - R * .8)} L${f(x - R * .08)} ${f(y - R * .72)} Q${f(x - R * .9)} ${f(y - R * .55)} ${f(x - R * .99)} ${f(y + R * .05)}Z" fill="#18141a" stroke="${OL}" stroke-width="4" stroke-linejoin="round"/>` +
-    `<path d="M${f(x - R * .5)} ${f(y - R * .9)} Q${f(x - R * .25)} ${f(y - R * .98)} ${f(x - R * .06)} ${f(y - R * .82)}" fill="none" stroke="#4a4458" stroke-width="3"/>` +
-    [-1, 1].map(sd => `<circle cx="${f(x + sd * R * .98)}" cy="${f(y + R * .32)}" r="${f(R * .09)}" fill="#e6e8ee" stroke="${OL}" stroke-width="3"/><circle cx="${f(x + sd * R * .98)}" cy="${f(y + R * .48)}" r="${f(R * .07)}" fill="#c9ccd6" stroke="${OL}" stroke-width="2"/>`).join('');
-  C.mother.bodyDeco = (c, shY, hipY, hem, bw) => {
-    let s = `<path d="M${f(-bw * .5)} ${f(shY + 4)} Q${f(-bw * .62)} ${f(hipY)} ${f(-bw * .7)} ${f(hem - 10)} L${f(-bw * .3)} ${f(hem - 10)} Q${f(-bw * .3)} ${f(hipY - 40)} ${f(-bw * .2)} ${f(shY - 6)}Z" fill="#0f0e12" opacity=".7"/>`;
-    for (let i = 0; i < 11; i++) { const a = Math.PI * (i / 10); s += `<circle cx="${f(-Math.cos(a) * bw * .24)}" cy="${f(shY - 2 + Math.sin(a) * bw * .16)}" r="${f(bw * .045)}" fill="#f4f2ee" stroke="${OL}" stroke-width="2"/>`; }
-    s += `<path d="M${f(-bw * .66)} ${f(hem - 14)} Q0 ${f(hem - 2)} ${f(bw * .66)} ${f(hem - 14)}" fill="none" stroke="#c9a24a" stroke-width="5"/>`;
-    return s;
-  };
-
+    `<path d="M${f(x - R * .99)} ${f(y + R * .1)} Q${f(x - R * 1.06)} ${f(y - R * 1.05)} ${f(x)} ${f(y - R * 1.12)} Q${f(x + R * 1.06)} ${f(y - R * 1.05)} ${f(x + R * .99)} ${f(y + R * .1)} Q${f(x + R * .92)} ${f(y - R * .5)} ${f(x + R * .06)} ${f(y - R * .74)} L${f(x)} ${f(y - R * .84)} L${f(x - R * .06)} ${f(y - R * .74)} Q${f(x - R * .92)} ${f(y - R * .5)} ${f(x - R * .99)} ${f(y + R * .1)}Z" fill="#17131a" stroke="${OL}" stroke-width="4" stroke-linejoin="round"/>` +
+    `<path d="M${f(x - R * .55)} ${f(y - R * .92)} Q${f(x - R * .3)} ${f(y - R * 1.02)} ${f(x - R * .08)} ${f(y - R * .86)} M${f(x + R * .55)} ${f(y - R * .92)} Q${f(x + R * .3)} ${f(y - R * 1.02)} ${f(x + R * .08)} ${f(y - R * .86)}" fill="none" stroke="#4a4458" stroke-width="3"/>` +
+    [-1, 1].map(sd => `<circle cx="${f(x + sd * R * .97)}" cy="${f(y + R * .36)}" r="${f(R * .07)}" fill="#e6e8ee" stroke="${OL}" stroke-width="2"/><path d="M${f(x + sd * R * .97)} ${f(y + R * .43)} l${f(-R * .06)} ${f(R * .12)} l${f(R * .06)} ${f(R * .08)} l${f(R * .06)} ${f(-R * .08)}Z" fill="#cfd3dc" stroke="${OL}" stroke-width="2"/>`).join('') +
+    `<path d="M${f(x - R * .17)} ${f(y + R * .56)} Q${f(x)} ${f(y + R * .66)} ${f(x + R * .17)} ${f(y + R * .56)}" fill="none" stroke="#c0505a" stroke-width="${f(R * .07)}" stroke-linecap="round" opacity=".7"/>`;
+  // жеңдер: анасынікі қызыл, алтын манжет
   // геологтар (болашақ көрінісі) — кепка, күртеше
   const geo = (coat, skin, extra = '') => ({
     name: 'Геолог', headR: 58, legH: 92, bodyH: 128, bodyW: 110, coatLen: 18, flare: .55,
@@ -300,7 +342,39 @@
     return s;
   }
 
+
+  // ---------- суреттен жасалған кейіпкерлер (ChatGPT суреті) ----------
+  function imgChar(id, st) {
+    const F = window.FAM[id], k = F.H / F.h, W = F.w * k;
+    const ph = st.walk || 0, walking = st.walking ? 1 : 0;
+    const bob = Math.abs(Math.sin(ph)) * -7 * walking + (st.bob || 0);
+    const rot = Math.sin(ph) * 2.2 * walking + (st.tilt || 0) * .35;
+    const X = (px) => (px - F.w / 2) * k, Y = (py) => (py - F.h) * k;
+    let s = `<g transform="translate(0 ${f(bob)}) rotate(${f(rot)} 0 0)">`;
+    const mo = st.mouth || 0, bl = st.blink || 0;
+    let src = F.src;
+    if (F.srcB && mo > .35) src = F.srcB;
+    if (F.srcV && bl > .5) src = F.srcV;
+    s += `<image href="${src}" x="${f(-W / 2)}" y="${f(-F.H)}" width="${f(W)}" height="${f(F.H)}"/>`;
+    const [[rx, ry], [lx, ly]] = F.eyes, d = Math.hypot(lx - rx, ly - ry) * k;
+    if (!F.srcV && bl > .05) for (const [ex, ey] of F.eyes) {
+      s += `<ellipse cx="${f(X(ex))}" cy="${f(Y(ey) - d * .02)}" rx="${f(d * .27)}" ry="${f(d * .17 * bl)}" fill="${F.skin}"/>`;
+      if (bl > .6) s += `<path d="M${f(X(ex) - d * .24)} ${f(Y(ey) + d * .03)} Q${f(X(ex))} ${f(Y(ey) + d * .1)} ${f(X(ex) + d * .24)} ${f(Y(ey) + d * .03)}" fill="none" stroke="#2a1a16" stroke-width="${f(d * .045)}" stroke-linecap="round"/>`;
+    }
+    if (!F.srcB && mo > .08) {
+      const [[ax, ay], [bx, by]] = F.mouth, m = Math.hypot(bx - ax, by - ay) * k;
+      const cx = X((ax + bx) / 2), cy = Y((ay + by) / 2) + m * .04, h = m * .2 * mo;
+      s += `<g filter="url(#soft)"><ellipse cx="${f(cx)}" cy="${f(cy + h * .35)}" rx="${f(m * .3 + m * .03 * mo)}" ry="${f(h + m * .03)}" fill="${F.lip}" opacity=".85"/>`;
+      s += `<ellipse cx="${f(cx)}" cy="${f(cy + h * .35)}" rx="${f(m * .25)}" ry="${f(h * .85 + m * .015)}" fill="#2a0b0c"/>`;
+      if (mo > .45) s += `<ellipse cx="${f(cx)}" cy="${f(cy - h * .3)}" rx="${f(m * .16)}" ry="${f(h * .18)}" fill="#e8dcd4" opacity=".8"/>`;
+      s += `</g>`;
+    }
+    if (st.hold === 'stone') s += `<g transform="translate(${f(W * .32)} ${f(-F.H * .42)})"><path d="M-16 6 L-10 -12 L6 -16 L18 -2 L10 14 L-8 14Z" fill="#3fbf8a" stroke="${OL}" stroke-width="4"/><circle cx="0" cy="0" r="30" fill="#6fffd0" opacity=".3"/></g>`;
+    return s + `</g>`;
+  }
+
   function draw(id, st = {}) {
+    if (window.FAM && window.FAM[id] && !window.DRAWN) return imgChar(id, st);
     if (id === 'copper' || id === 'coal' || id === 'gold') return stone(id, st);
     return human(C[id], st);
   }
