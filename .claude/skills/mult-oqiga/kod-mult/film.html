@@ -1,0 +1,82 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:M;src:url(Montserrat.ttf)}
+html,body{margin:0;background:#000;overflow:hidden;font-family:M}
+#stage{position:relative;width:1080px;height:1920px;overflow:hidden}
+#bg,#fg,#ui{position:absolute;left:0;top:0;width:1080px;height:1920px}
+#bg canvas{display:block}
+</style><script src="chars.js"></script></head><body>
+<div id="stage"><div id="bg"></div>
+<svg id="fg" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
+<svg id="ui" width="1080" height="1920" viewBox="0 0 1080 1920"></svg></div>
+<script type="module">
+import { makeRenderer, W, H } from './room.js';
+import * as E from './envs.js';
+import { SCENES, U } from './scenes.js';
+
+const R = makeRenderer();
+const ENVS = {};
+const env = (name) => ENVS[name] || (ENVS[name] = ({ house: E.houseInterior, mountains: E.mountains, summit: E.summit, crystals: E.caveCrystals, chasm: E.caveChasm, copper: E.caveCopper, mine: E.mine, academy: E.academy })[name]());
+const fg = document.getElementById('fg'), ui = document.getElementById('ui');
+
+// дауыс: window.VOICE = {fps, scenes:[{who:{kanysh:[amp...]}}], offsets} — болса ауыз соған сай
+const qs = new URLSearchParams(location.search);
+const only = qs.has('scene') ? +qs.get('scene') : null;
+const list = only ? [SCENES[only - 1]] : SCENES;
+let starts = [], acc = 0; for (const s of list) { starts.push(acc); acc += s.dur; }
+const TOTAL = acc;
+
+function subtitle(lines, t) {
+  let s = '';
+  for (const [a, b, who, txt] of lines) if (t >= a && t < b + .15 && txt) {
+    // ұзын сөйлемді екі бөлікке бөлеміз (уақыт бойынша)
+    const parts = txt.length > 46 ? splitHalf(txt) : [txt];
+    const k = parts.length > 1 ? (t - a < (b - a) * parts[0].length / txt.length ? 0 : 1) : 0;
+    const words = parts[k].split(' '); const rows = []; let cur = '';
+    for (const w of words) { if ((cur + ' ' + w).trim().length > 24) { rows.push(cur.trim()); cur = w; } else cur += ' ' + w; }
+    rows.push(cur.trim());
+    const lh = 70, y0 = 1640 - (rows.length - 1) * lh;
+    const col = who === 'narrator' ? '#ffe08a' : '#fff';
+    rows.forEach((l, i) => { s += `<text x="540" y="${y0 + i * lh}" text-anchor="middle" font-size="54" font-weight="800" fill="${col}" stroke="#1d140f" stroke-width="11" paint-order="stroke" stroke-linejoin="round">${l}</text>`; });
+  }
+  return s;
+}
+function splitHalf(txt) {
+  const m = txt.length / 2; let best = -1, bd = 1e9;
+  for (let i = 0; i < txt.length; i++) if ('.,!?–'.includes(txt[i]) && txt[i + 1] === ' ' && Math.abs(i - m) < bd) { bd = Math.abs(i - m); best = i + 1; }
+  if (best < 0) { for (let i = 0; i < txt.length; i++) if (txt[i] === ' ' && Math.abs(i - m) < bd) { bd = Math.abs(i - m); best = i; } }
+  return [txt.slice(0, best).trim(), txt.slice(best).trim()];
+}
+
+window.renderFrame = (T) => {
+  let i = 0; while (i < list.length - 1 && T >= starts[i + 1]) i++;
+  const sc = list[i], t = T - starts[i];
+  U.cur = { sc, t, idx: SCENES.indexOf(sc) };
+  const sh = sc.shot(t);
+  let fgS = U.DEFS;
+  if (sh.env) {
+    const e = env(sh.env);
+    const [fx, fy, z] = sh.cam || [540, 960, 1];
+    const vw = W / z, vh = H / z, vx = U.clamp(fx - vw / 2, 0, W - vw), vy = U.clamp(fy - vh / 2, 0, H - vh);
+    e.cam.setViewOffset(W, H, vx, vy, vw, vh);
+    e.update(t, sh.p || {}); R.render(e.scene, e.cam);
+    fg.setAttribute('viewBox', `${vx} ${vy} ${vw} ${vh}`);
+    fgS += sc.draw(t, sh);
+    fgS += `<rect x="${vx}" y="${vy}" width="${vw}" height="${vh}" fill="url(#vig)"/>`;
+  } else {
+    fg.setAttribute('viewBox', '0 0 1080 1920');
+    fgS += sc.draw(t, sh);
+  }
+  fg.innerHTML = fgS;
+  let uiS = sc.ui ? sc.ui(t, sh) : '';
+  uiS += subtitle(sc.lines, t);
+  // көріністер арасы — қараңғылау
+  const fade = Math.max(1 - t / .35, U.ease((t - (sc.dur - .35)) / .35));
+  if (fade > 0) uiS += `<rect width="1080" height="1920" fill="#000" opacity="${U.clamp(fade, 0, 1).toFixed(3)}"/>`;
+  if (sh.flash) uiS += `<rect width="1080" height="1920" fill="#fff" opacity="${sh.flash.toFixed(3)}"/>`;
+  ui.innerHTML = uiS;
+  return true;
+};
+window.TOTAL = TOTAL;
+window.STARTS = starts;
+window.READY = true;
+</script></body></html>

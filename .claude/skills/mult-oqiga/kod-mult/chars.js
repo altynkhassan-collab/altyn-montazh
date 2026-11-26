@@ -215,6 +215,25 @@
       ? `<g transform="translate(${f(x)} ${f(y)}) rotate(-30)"><rect x="-4" y="-70" width="8" height="78" fill="#8a5a2f" stroke="${OL}" stroke-width="3"/><rect x="-22" y="-82" width="44" height="16" rx="3" fill="#888" stroke="${OL}" stroke-width="3"/></g>` : '',
   };
 
+
+  // геологтар (болашақ көрінісі) — кепка, күртеше
+  const geo = (coat, skin, extra = '') => ({
+    name: 'Геолог', headR: 58, legH: 92, bodyH: 128, bodyW: 110, coatLen: 18, flare: .55,
+    skin, coat, trousers: '#4a4038', boots: '#2a1e16', armLen: 100, armW: 23, legW: 23,
+    bodyDeco: (c, shY, hipY, hem, bw) => `<rect x="${f(-bw * .5)}" y="${f(hipY - 26)}" width="${f(bw)}" height="12" rx="4" fill="#3a2414" stroke="${OL}" stroke-width="4"/>` +
+      `<rect x="${f(bw * .08)}" y="${f(shY + 30)}" width="30" height="26" rx="4" fill="${shade(coat, .8)}" stroke="${OL}" stroke-width="3"/>`,
+    frontHead: (x, y, R) =>
+      `<path d="M${f(x - R * .92)} ${f(y - R * .35)} Q${f(x - R * .9)} ${f(y - R * 1.2)} ${f(x)} ${f(y - R * 1.18)} Q${f(x + R * .9)} ${f(y - R * 1.2)} ${f(x + R * .92)} ${f(y - R * .35)}Z" fill="${shade(coat, .7)}" stroke="${OL}" stroke-width="${SW}" stroke-linejoin="round"/>` +
+      `<path d="M${f(x - R * .95)} ${f(y - R * .38)} Q${f(x - R * .2)} ${f(y - R * .5)} ${f(x + R * 1.3)} ${f(y - R * .3)} L${f(x + R * .9)} ${f(y - R * .45)}" fill="${shade(coat, .55)}" stroke="${OL}" stroke-width="4" stroke-linejoin="round"/>` + extra,
+    holds: (what, x, y) => what === 'paper' ? `<rect x="${f(x - 20)}" y="${f(y - 44)}" width="44" height="54" rx="3" fill="#f4f1ea" stroke="${OL}" stroke-width="3" transform="rotate(-10 ${f(x)} ${f(y)})"/>` : '',
+  });
+  C.geo1 = geo('#8a6a3a', '#e2ad84');
+  C.geo2 = geo('#4a6a7a', '#d9a27a');
+  C.geo3 = geo('#6a7a4a', '#eab68c');
+  C.adult.holds = (what, x, y) => what === 'hammer'
+    ? `<g transform="translate(${f(x)} ${f(y)}) rotate(-30)"><rect x="-4" y="-70" width="8" height="78" fill="#8a5a2f" stroke="${OL}" stroke-width="3"/><rect x="-22" y="-82" width="44" height="16" rx="3" fill="#888" stroke="${OL}" stroke-width="3"/></g>`
+    : what === 'rock' ? `<g transform="translate(${f(x)} ${f(y - 10)})"><path d="M-16 6 L-10 -12 L6 -16 L18 -2 L10 14 L-8 14Z" fill="#3fbf8a" stroke="${OL}" stroke-width="4"/></g>` : '';
+
   // ---------- сөйлейтін тастар ----------
   function stone(kind, st = {}) {
     const P = {
