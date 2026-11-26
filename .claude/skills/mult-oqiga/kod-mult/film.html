@@ -4,7 +4,7 @@ html,body{margin:0;background:#000;overflow:hidden;font-family:M}
 #stage{position:relative;width:1080px;height:1920px;overflow:hidden}
 #bg,#fg,#ui{position:absolute;left:0;top:0;width:1080px;height:1920px}
 #bg canvas{display:block}
-</style><script src="chars.js"></script></head><body>
+</style><script src="chars.js"></script><script src="voice.js"></script></head><body>
 <div id="stage"><div id="bg"></div>
 <svg id="fg" width="1080" height="1920" viewBox="0 0 1080 1920"></svg>
 <svg id="ui" width="1080" height="1920" viewBox="0 0 1080 1920"></svg></div>
@@ -22,7 +22,13 @@ const fg = document.getElementById('fg'), ui = document.getElementById('ui');
 const qs = new URLSearchParams(location.search);
 const only = qs.has('scene') ? +qs.get('scene') : null;
 const list = only ? [SCENES[only - 1]] : SCENES;
-let starts = [], acc = 0; for (const s of list) { starts.push(acc); acc += s.dur; }
+const VS = (sc) => window.VOICE ? window.VOICE.scenes[SCENES.indexOf(sc)] : null;
+const durOf = (sc) => VS(sc) ? VS(sc).dur : sc.dur;
+// жаңа уақыт -> сценарийдегі уақыт (кадрлар соған қарай созылады)
+const warp = (sc, tn) => { const v = VS(sc); if (!v) return tn; const w = v.warp;
+  for (let i = 1; i < w.length; i++) if (tn <= w[i][0]) { const [a0, b0] = w[i - 1], [a1, b1] = w[i]; return b0 + (b1 - b0) * (a1 > a0 ? (tn - a0) / (a1 - a0) : 0); }
+  return w[w.length - 1][1] + (tn - w[w.length - 1][0]); };
+let starts = [], acc = 0; for (const s of list) { starts.push(acc); acc += durOf(s); }
 const TOTAL = acc;
 
 function subtitle(lines, t) {
@@ -49,8 +55,9 @@ function splitHalf(txt) {
 
 window.renderFrame = (T) => {
   let i = 0; while (i < list.length - 1 && T >= starts[i + 1]) i++;
-  const sc = list[i], t = T - starts[i];
-  U.cur = { sc, t, idx: SCENES.indexOf(sc) };
+  const sc = list[i], tn = T - starts[i], t = warp(sc, tn);
+  U.cur = { sc, t, tn, idx: SCENES.indexOf(sc) };
+  const vs = VS(sc);
   const sh = sc.shot(t);
   let fgS = U.DEFS;
   if (sh.env) {
@@ -68,9 +75,9 @@ window.renderFrame = (T) => {
   }
   fg.innerHTML = fgS;
   let uiS = sc.ui ? sc.ui(t, sh) : '';
-  uiS += subtitle(sc.lines, t);
+  uiS += vs ? subtitle(vs.lines, tn) : subtitle(sc.lines, t);
   // көріністер арасы — қараңғылау
-  const fade = Math.max(1 - t / .35, U.ease((t - (sc.dur - .35)) / .35));
+  const D = durOf(sc); const fade = Math.max(1 - tn / .35, U.ease((tn - (D - .35)) / .35));
   if (fade > 0) uiS += `<rect width="1080" height="1920" fill="#000" opacity="${U.clamp(fade, 0, 1).toFixed(3)}"/>`;
   if (sh.flash) uiS += `<rect width="1080" height="1920" fill="#fff" opacity="${sh.flash.toFixed(3)}"/>`;
   ui.innerHTML = uiS;

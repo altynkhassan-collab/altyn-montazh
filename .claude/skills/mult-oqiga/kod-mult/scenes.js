@@ -10,8 +10,10 @@ const blink = (t, ph) => { const x = (t + ph) % 3.7; return x < .14 ? Math.sin(x
 // ауыз: дауыс файлы болса — дыбыс күші, болмаса — шартты
 U.mouth = (who, t) => {
   const { sc, idx } = U.cur;
-  const V = window.VOICE && window.VOICE[idx];
-  if (V && V[who]) { const a = V[who], i = Math.floor(t * V.fps); return clamp((a[i] || 0) * 1.0, 0, 1); }
+  const V = window.VOICE;
+  if (V) { const tn = U.cur.tn;
+    for (const [a, b, w, , id] of V.scenes[idx].lines) if (w === who && tn >= a && tn < b) { const arr = V.amp[id] || [], i = Math.floor((tn - a) * V.fps); return clamp(arr[i] || 0, 0, 1); }
+    return 0; }
   for (const [a, b, w] of sc.lines) if (w === who && t > a && t < b) return clamp(.15 + .85 * Math.abs(Math.sin(t * 12.5) * Math.sin(t * 7.1 + 1.3)), 0, 1);
   return 0;
 };
