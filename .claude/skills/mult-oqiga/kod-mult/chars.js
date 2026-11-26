@@ -216,6 +216,50 @@
   };
 
 
+  // ===== Клиенттің отбасы: бет-әлпеті фотоға ұқсатылған =====
+  C.kanysh_old = Object.assign({}, C.kanysh); C.father_old = Object.assign({}, C.father); C.mother_old = Object.assign({}, C.mother);
+  // Бала: қалың қара шаш, маңдайына түскен кекіл, қоңырқай тері
+  C.kanysh.skin = '#e2a97c';
+  C.kanysh.faceOpt = { eyeRy: .23 };
+  C.kanysh.frontHead = (x, y, R) =>
+    `<path d="M${f(x - R * 1.0)} ${f(y + R * .05)} Q${f(x - R * 1.08)} ${f(y - R * 1.0)} ${f(x - R * .2)} ${f(y - R * 1.12)} Q${f(x + R * .9)} ${f(y - R * 1.15)} ${f(x + R * 1.02)} ${f(y - R * .1)} L${f(x + R * .9)} ${f(y - R * .2)} L${f(x + R * .8)} ${f(y - R * .42)} L${f(x + R * .55)} ${f(y - R * .36)} L${f(x + R * .38)} ${f(y - R * .5)} L${f(x + R * .15)} ${f(y - R * .34)} L${f(x - R * .08)} ${f(y - R * .5)} L${f(x - R * .3)} ${f(y - R * .34)} L${f(x - R * .52)} ${f(y - R * .48)} L${f(x - R * .72)} ${f(y - R * .3)} L${f(x - R * .88)} ${f(y - R * .4)} L${f(x - R * .92)} ${f(y - R * .05)}Z" fill="#17141a" stroke="${OL}" stroke-width="4" stroke-linejoin="round"/>` +
+    `<path d="M${f(x - R * .5)} ${f(y - R * .95)} q${f(R * .15)} ${f(-R * .12)} ${f(R * .3)} ${f(-R * .02)} M${f(x + R * .05)} ${f(y - R * .98)} q${f(R * .15)} ${f(-R * .1)} ${f(R * .3)} ${f(R * .02)}" fill="none" stroke="#4a4458" stroke-width="4" stroke-linecap="round"/>`;
+  // Әкесі: қысқа ақ шаш, биік маңдай, қара тікбұрышты көзілдірік, ақшыл сақал-мұрт іздері
+  C.father.skin = '#e9b892';
+  C.father.faceOpt = { eyeRy: .22, browColor: '#6a6a66' };
+  C.father.frontHead = (x, y, R) => {
+    let s = '';
+    // шаш: ақ, қысқа; маңдай биік (шаш сызығы шегінген)
+    const r = R * 1.07;
+    s += `<path d="M${f(x - r)} ${f(y + R * .05)} A${f(r)} ${f(r)} 0 0 1 ${f(x + r)} ${f(y + R * .05)} L${f(x + R * .93)} ${f(y - R * .05)} Q${f(x + R * .84)} ${f(y - R * .42)} ${f(x + R * .58)} ${f(y - R * .5)} Q${f(x + R * .32)} ${f(y - R * .48)} ${f(x + R * .2)} ${f(y - R * .58)} Q${f(x)} ${f(y - R * .66)} ${f(x - R * .2)} ${f(y - R * .58)} Q${f(x - R * .32)} ${f(y - R * .48)} ${f(x - R * .58)} ${f(y - R * .5)} Q${f(x - R * .84)} ${f(y - R * .42)} ${f(x - R * .93)} ${f(y - R * .05)}Z" fill="#cfcec8" stroke="${OL}" stroke-width="4" stroke-linejoin="round"/>`;
+    s += `<path d="M${f(x - R * .5)} ${f(y - R * .88)} q${f(R * .2)} ${f(-R * .08)} ${f(R * .35)} ${f(R * .02)} M${f(x + R * .1)} ${f(y - R * .9)} q${f(R * .2)} ${f(-R * .06)} ${f(R * .35)} ${f(R * .05)}" fill="none" stroke="#9e9d96" stroke-width="4" stroke-linecap="round"/>`;
+    // қырынған сақал-мұрт (ақшыл көлеңке)
+    s += `<path d="M${f(x - R * .72)} ${f(y + R * .3)} Q${f(x - R * .6)} ${f(y + R * 1.0)} ${f(x)} ${f(y + R * 1.02)} Q${f(x + R * .6)} ${f(y + R * 1.0)} ${f(x + R * .72)} ${f(y + R * .3)} Q${f(x + R * .5)} ${f(y + R * .7)} ${f(x)} ${f(y + R * .7)} Q${f(x - R * .5)} ${f(y + R * .7)} ${f(x - R * .72)} ${f(y + R * .3)}Z" fill="#9a9590" opacity=".3"/>`;
+    s += `<path d="M${f(x - R * .34)} ${f(y + R * .44)} Q${f(x)} ${f(y + R * .36)} ${f(x + R * .34)} ${f(y + R * .44)}" fill="none" stroke="#9a9590" stroke-width="${f(R * .09)}" stroke-linecap="round" opacity=".45"/>`;
+    // көзілдірік
+    const ex = R * .9 * .36, ey = y + R * .06 - R * .9 * .02, gw = R * .3, gh = R * .23;
+    for (const sd of [-1, 1]) s += `<rect x="${f(x + sd * ex - gw)}" y="${f(ey - gh)}" width="${f(gw * 2)}" height="${f(gh * 2)}" rx="${f(R * .05)}" fill="#ffffff" fill-opacity=".12" stroke="#151515" stroke-width="${f(R * .085)}"/>`;
+    s += `<path d="M${f(x - ex + gw)} ${f(ey - gh * .3)} Q${f(x)} ${f(ey - gh * .6)} ${f(x + ex - gw)} ${f(ey - gh * .3)}" fill="none" stroke="#151515" stroke-width="${f(R * .07)}"/>`;
+    s += `<path d="M${f(x - ex - gw)} ${f(ey - gh * .4)} L${f(x - R * .97)} ${f(ey - gh * .6)} M${f(x + ex + gw)} ${f(ey - gh * .4)} L${f(x + R * .97)} ${f(ey - gh * .6)}" stroke="#151515" stroke-width="${f(R * .07)}"/>`;
+    return s;
+  };
+  // Анасы: қара шаш артқа жиналған (ортасынан фарқ), сырға, інжу алқа, қара көйлек
+  C.mother.skin = '#f0c6a2';
+  C.mother.noEars = false;
+  C.mother.coat = '#22202a'; C.mother.trousers = '#22202a';
+  C.mother.faceOpt = { eyeRy: .25 };
+  C.mother.backHead = (x, y, R) => `<circle cx="${f(x + R * .55)}" cy="${f(y - R * .62)}" r="${f(R * .42)}" fill="#18141a" stroke="${OL}" stroke-width="${SW}"/>`;
+  C.mother.frontHead = (x, y, R) =>
+    `<path d="M${f(x - R * .99)} ${f(y + R * .05)} Q${f(x - R * 1.06)} ${f(y - R * 1.0)} ${f(x)} ${f(y - R * 1.06)} Q${f(x + R * 1.06)} ${f(y - R * 1.0)} ${f(x + R * .99)} ${f(y + R * .05)} Q${f(x + R * .9)} ${f(y - R * .55)} ${f(x + R * .08)} ${f(y - R * .72)} L${f(x)} ${f(y - R * .8)} L${f(x - R * .08)} ${f(y - R * .72)} Q${f(x - R * .9)} ${f(y - R * .55)} ${f(x - R * .99)} ${f(y + R * .05)}Z" fill="#18141a" stroke="${OL}" stroke-width="4" stroke-linejoin="round"/>` +
+    `<path d="M${f(x - R * .5)} ${f(y - R * .9)} Q${f(x - R * .25)} ${f(y - R * .98)} ${f(x - R * .06)} ${f(y - R * .82)}" fill="none" stroke="#4a4458" stroke-width="3"/>` +
+    [-1, 1].map(sd => `<circle cx="${f(x + sd * R * .98)}" cy="${f(y + R * .32)}" r="${f(R * .09)}" fill="#e6e8ee" stroke="${OL}" stroke-width="3"/><circle cx="${f(x + sd * R * .98)}" cy="${f(y + R * .48)}" r="${f(R * .07)}" fill="#c9ccd6" stroke="${OL}" stroke-width="2"/>`).join('');
+  C.mother.bodyDeco = (c, shY, hipY, hem, bw) => {
+    let s = `<path d="M${f(-bw * .5)} ${f(shY + 4)} Q${f(-bw * .62)} ${f(hipY)} ${f(-bw * .7)} ${f(hem - 10)} L${f(-bw * .3)} ${f(hem - 10)} Q${f(-bw * .3)} ${f(hipY - 40)} ${f(-bw * .2)} ${f(shY - 6)}Z" fill="#0f0e12" opacity=".7"/>`;
+    for (let i = 0; i < 11; i++) { const a = Math.PI * (i / 10); s += `<circle cx="${f(-Math.cos(a) * bw * .24)}" cy="${f(shY - 2 + Math.sin(a) * bw * .16)}" r="${f(bw * .045)}" fill="#f4f2ee" stroke="${OL}" stroke-width="2"/>`; }
+    s += `<path d="M${f(-bw * .66)} ${f(hem - 14)} Q0 ${f(hem - 2)} ${f(bw * .66)} ${f(hem - 14)}" fill="none" stroke="#c9a24a" stroke-width="5"/>`;
+    return s;
+  };
+
   // геологтар (болашақ көрінісі) — кепка, күртеше
   const geo = (coat, skin, extra = '') => ({
     name: 'Геолог', headR: 58, legH: 92, bodyH: 128, bodyW: 110, coatLen: 18, flare: .55,
