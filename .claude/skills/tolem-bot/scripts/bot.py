@@ -11,7 +11,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "sait-jasau", "scripts"))
 import sait as S   # Cloudflare көмекшілері (account, subdomain, api, wr, slug)
 
-FIELDS = ["COURSE_NAME", "COURSE_DESC", "PRICE", "KASPI_URL", "ADMIN_ID", "CHANNEL_ID"]
+FIELDS = ["COURSE_NAME", "COURSE_DESC", "PRICE", "KASPI_URL", "KASPI_PHONE", "KASPI_NAME", "ADMIN_ID", "CHANNEL_ID"]
+OPTIONAL = {"KASPI_URL", "KASPI_PHONE", "KASPI_NAME"}
 
 def cfg_path(name): return os.path.join("Боттар", name, "config.json")
 
@@ -49,7 +50,8 @@ def publish(name):
         if code == "200": break
         time.sleep(10)
     json.dump({**m, "url": url}, open(meta, "w"))
-    miss = [k for k in FIELDS if not c.get(k)]
+    miss = [k for k in FIELDS if not c.get(k) and k not in OPTIONAL]
+    if not (c.get("KASPI_URL") or c.get("KASPI_PHONE")): miss.append("KASPI_URL немесе KASPI_PHONE")
     print("✅ бот жарияланды:", url)
     print("🔑 токен қою беті (бір рет):", url + "/setup")
     if miss: print("⏳ әлі толтырылмаған:", ", ".join(miss))
@@ -62,7 +64,8 @@ def status(name):
     print("сілтеме:", url)
     print("токен:", "✅ қосылған" if "Бот қосылды" in r or "бұрын қойылған" in r else "❌ әлі қойылмаған — " + url + "/setup")
     c = json.load(open(cfg_path(name)))
-    miss = [k for k in FIELDS if not c.get(k)]
+    miss = [k for k in FIELDS if not c.get(k) and k not in OPTIONAL]
+    if not (c.get("KASPI_URL") or c.get("KASPI_PHONE")): miss.append("KASPI_URL немесе KASPI_PHONE")
     print("баптаулар:", "✅ толық" if not miss else "⏳ жоқ: " + ", ".join(miss))
 
 if __name__ == "__main__":

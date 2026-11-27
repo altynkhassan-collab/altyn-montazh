@@ -3,20 +3,22 @@
 //   BOT_TOKEN  — секрет, BotFather берген токен
 //   ADMIN_ID   — сіздің Telegram ID (чектер сізге келеді)
 //   CHANNEL_ID — жабық каналдың ID (-100...)
-//   KASPI_URL  — Kaspi Pay төлем сілтемесі
+//   KASPI_URL  — Kaspi Pay төлем сілтемесі (Kaspi Pay жоқ болса — KASPI_PHONE + KASPI_NAME: нөмірге аударым)
 //   PRICE      — баға мәтіні, мысалы "4 990 ₸"
 
 // Бір курс: аты, сипаттамасы, бағасы, Kaspi сілтемесі, канал — wrangler.toml [vars]-тан
 function courses(env) {
-  if (!env.KASPI_URL || !env.CHANNEL_ID) return {};
-  return { main: { name: env.COURSE_NAME || "Курс", desc: env.COURSE_DESC || "", price: env.PRICE || "", kaspi: env.KASPI_URL, ch: [env.CHANNEL_ID] } };
+  if (!(env.KASPI_URL || env.KASPI_PHONE) || !env.CHANNEL_ID) return {};
+  return { main: { name: env.COURSE_NAME || "Курс", desc: env.COURSE_DESC || "", price: env.PRICE || "", kaspi: env.KASPI_URL || "",
+    phone: env.KASPI_PHONE || "", holder: env.KASPI_NAME || "", ch: [env.CHANNEL_ID] } };
 }
 
 const T = {
   start: (c) =>
     `👋 Сәлеметсіз бе!\n\n<b>${c.name}</b>\n${c.desc}\n\n` +
     `Курс бағасы — <b>${c.price}</b>\n\n` +
-    `1️⃣ Төмендегі батырма арқылы Kaspi-де төлеңіз.\n` +
+    (c.kaspi ? `1️⃣ Төмендегі батырма арқылы Kaspi-де төлеңіз.\n`
+      : `1️⃣ Kaspi-ге аударым жасаңыз:\n📱 <code>${c.phone}</code>${c.holder ? ` (${c.holder})` : ""}\nНөмірді басып тұрсаңыз, көшіріледі.\n`) +
     `2️⃣ Төлем чегін (скриншот немесе PDF) осы чатқа жіберіңіз.\n` +
     `3️⃣ Чек тексерілгеннен кейін курс каналына кіру сілтемесі осында келеді ✅`,
   menu: "👋 Сәлеметсіз бе! Қай курсқа қосыласыз?",
@@ -32,7 +34,8 @@ async function showCourse(env, chat, key) {
   const C = courses(env), c = C[key];
   if (!c) return;
   if (env.SITE) await env.SITE.put("_choice_" + chat, key);
-  return send(env, chat, T.start(c), { reply_markup: { inline_keyboard: [[{ text: `Kaspi арқылы төлеу — ${c.price}`, url: c.kaspi }]] } });
+  const kb = c.kaspi ? { reply_markup: { inline_keyboard: [[{ text: `Kaspi арқылы төлеу — ${c.price}`, url: c.kaspi }]] } } : {};
+  return send(env, chat, T.start(c), kb);
 }
 
 async function tg(env, method, body) {
