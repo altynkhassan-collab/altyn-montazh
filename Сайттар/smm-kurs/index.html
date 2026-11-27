@@ -1,0 +1,627 @@
+<!doctype html>
+<html lang="kk"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SMM маманы — курс</title>
+<meta name="description" content="SMM және мобилография офлайн курсының презентациясы">
+<meta property="og:title" content="SMM маманы — курс">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400..700&family=Unbounded:wght@400..800&display=swap">
+<style>
+html,body{margin:0;height:100%;background:#0B0C09;overflow:hidden;}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:0 0;}
+:root {
+  --dark: #12140F;
+  --dark2: #1E2219;
+  --light: #F4F5EF;
+  --card: #FCFCF8;
+  --lime: #C6F432;
+  --ink: #15170F;
+  --olive: #4F6600;
+  --soft: #4B5144;
+  --softd: #C9CFBE;
+}
+body { font-family: 'Montserrat', Arial, sans-serif; }
+section {
+  box-sizing: border-box;
+  padding: 128px 128px 160px;
+  background: var(--light);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  counter-increment: page;
+  font-family: 'Montserrat', Arial, sans-serif;
+}
+section.dark { background: var(--dark); color: var(--light); }
+section.lime { background: var(--lime); color: var(--ink); }
+section.center { justify-content: center; }
+
+h1, h2, h3 { font-family: 'Unbounded', Arial, sans-serif; margin: 0; }
+h1 { font-size: 200px; font-weight: 800; line-height: 1; letter-spacing: -4px; }
+h2 { font-size: 72px; font-weight: 700; line-height: 1.08; letter-spacing: -1px; }
+h3 { font-size: 34px; font-weight: 600; line-height: 1.2; }
+p { margin: 0; font-size: 28px; line-height: 1.4; }
+
+.head { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+.pill {
+  font-family: 'Unbounded', Arial, sans-serif;
+  font-size: 44px; font-weight: 600; line-height: 1.2;
+  background: var(--ink); color: var(--lime);
+  padding: 12px 44px; border-radius: 200px;
+  
+}
+.dark .pill { background: var(--lime); color: var(--ink); }
+.pill.big { font-size: 80px; padding: 16px 64px; }
+
+.eyebrow { font-size: 24px; font-weight: 700; letter-spacing: 3px; color: var(--olive); }
+.dark .eyebrow { color: var(--lime); }
+.tag { font-family: 'Unbounded', Arial, sans-serif; font-size: 24px; font-weight: 600; color: var(--olive); }
+.dark .tag { color: var(--lime); }
+.lime .tag { color: var(--ink); }
+.muted { color: var(--soft); }
+.dark .muted { color: var(--softd); }
+.lead { font-size: 40px; line-height: 1.3; font-weight: 500; width: 1100px; }
+.big { font-size: 40px; line-height: 1.3; font-weight: 500; }
+.byline { font-size: 28px; font-weight: 600; color: var(--lime); }
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 96px; align-items: start; }
+.split2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: stretch; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; align-items: stretch; }
+.grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 24px; align-items: stretch; }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+.chips { display: flex; flex-wrap: wrap; gap: 16px; }
+
+.card {
+  background: var(--card); border-radius: 28px; padding: 36px;
+  display: flex; flex-direction: column; gap: 16px;
+  box-shadow: 0 12px 40px rgba(21,23,15,0.06);
+}
+.dark .card { background: var(--dark2); box-shadow: none; }
+.lime .card { background: var(--ink); color: var(--light); box-shadow: none; }
+.lime .card .tag { color: var(--lime); }
+section .card.hl { background: var(--lime); color: var(--ink); }
+section .card.hl .tag { color: var(--ink); }
+section .card.hl .bul { color: var(--ink); }
+
+.row { font-size: 32px; font-weight: 600; padding: 22px 32px; border-radius: 20px; background: var(--card); }
+.dark .row { background: var(--dark2); }
+section .row.hl { background: var(--lime); color: var(--ink); }
+
+.lab {
+  align-self: flex-start;
+  font-family: 'Unbounded', Arial, sans-serif; font-size: 26px; font-weight: 600;
+  background: var(--lime); color: var(--ink); padding: 8px 18px; line-height: 1.25;
+}
+.bul { margin: 0; padding-left: 32px; font-size: 24px; line-height: 1.4; }
+.dark .bul { color: var(--softd); }
+.bul li { margin: 0 0 6px; }
+
+.chip {
+  font-size: 30px; font-weight: 600; padding: 14px 30px;
+  border-radius: 200px; border: 2px solid var(--ink); line-height: 1.2;
+}
+.dark .chip { border: 2px solid var(--lime); }
+.lime .chip { background: var(--ink); color: var(--lime); border: 2px solid var(--ink); }
+.chip.sm { font-size: 24px; padding: 10px 22px; }
+
+.band { background: var(--lime); color: var(--ink); border-radius: 28px; padding: 36px 48px; }
+.band.ink { background: var(--ink); color: var(--light); }
+.band-text { font-size: 38px; font-weight: 600; line-height: 1.3; }
+.hi { color: var(--lime); }
+
+.stat { font-family: 'Unbounded', Arial, sans-serif; font-size: 96px; font-weight: 800; line-height: 1; color: var(--lime); }
+.num { font-family: 'Unbounded', Arial, sans-serif; font-size: 64px; font-weight: 800; line-height: 1; color: var(--lime); }
+section .card.hl .num { color: var(--ink); }
+.q { font-family: 'Unbounded', Arial, sans-serif; font-size: 48px; font-weight: 600; line-height: 1.2; }
+.qrow { display: flex; align-items: center; gap: 40px; padding: 18px 0; border-bottom: 2px solid #D5D9CB; }
+.qn { font-family: 'Unbounded', Arial, sans-serif; font-size: 32px; font-weight: 700; color: var(--olive); width: 80px; }
+.item { font-size: 26px; line-height: 1.4; padding-top: 14px; border-top: 2px solid #3A4030; }
+.item.wide { grid-column: 1 / 3; }
+.handle { font-size: 32px; font-weight: 700; }
+.small { font-size: 24px; }
+
+.orb {
+  position: absolute; left: 1150px; top: 220px; width: 640px; height: 640px;
+  background: #1F2612; border: 3px solid #C6F432;
+  
+}
+.orb2 {
+  position: absolute; left: 1420px; top: 150px; width: 160px; height: 160px;
+  background: #C6F432;
+  
+}
+
+.foot {
+  position: absolute; left: 128px; bottom: 64px; width: 1664px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.fp { font-size: 24px; font-weight: 600; opacity: 0.55; }
+.pg { font-family: 'Unbounded', Arial, sans-serif; font-size: 24px; font-weight: 600; opacity: 0.55; }
+.pg::after { content: counter(page); }
+
+.slide.active .r { animation: rise 700ms cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i, 0) * 110ms); }
+@keyframes rise { from { opacity: 0; transform: translateY(48px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pop { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+.roomy .bul { font-size: 30px; }
+.roomy .chip { font-size: 40px; padding: 18px 40px; }
+.roomy .chip.sm { font-size: 28px; padding: 12px 26px; }
+.roomy h3 { font-size: 44px; }
+.roomy .q { font-size: 56px; }
+.roomy .small { font-size: 30px; }
+.roomy .big { font-size: 46px; }
+.roomy .muted { font-size: 32px; }
+.fill { flex: 1; }
+.fill .card { justify-content: space-between; }
+
+.slide.active .pill { animation: pop 650ms cubic-bezier(.2,.8,.2,1) 250ms both; }
+.slide.active .orb { animation: fade 1400ms ease-out both, spin 40s linear infinite; }
+.slide.active .orb2 { animation: fade 1000ms ease-out 500ms both, float 6s ease-in-out infinite alternate; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes float { from { transform: translateY(0); } to { transform: translateY(30px); } }
+.orb, .orb2 { border-radius: 50%; box-sizing: border-box; }
+.orb { background: radial-gradient(circle at 30% 30%, #2B3518, #1A2010 70%); }
+.orb2 { box-shadow: 0 0 80px rgba(198,244,50,.55); }
+.bul { padding-left: 32px; } ol.bul { padding-left: 36px; }
+
+section.slide{position:absolute;inset:0;width:1920px;height:1080px;opacity:0;visibility:hidden;transform:translateX(80px);transition:opacity .5s ease,transform .6s cubic-bezier(.2,.8,.2,1),visibility 0s .6s;}
+section.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .5s ease,transform .6s cubic-bezier(.2,.8,.2,1);}
+section.slide.past{transform:translateX(-80px);}
+#ui{position:fixed;left:0;right:0;bottom:0;display:flex;align-items:center;gap:10px;padding:10px 14px;font:600 14px Montserrat,Arial,sans-serif;color:#C9CFBE;opacity:.25;transition:opacity .3s;z-index:9}
+#ui:hover,body.touch #ui{opacity:1}
+#ui button{background:#1E2219;color:#C6F432;border:1px solid #3A4030;border-radius:999px;padding:8px 14px;font:inherit;cursor:pointer}
+#bar{position:fixed;left:0;top:0;height:4px;background:#C6F432;transition:width .4s;z-index:9}
+#ui .sp{flex:1}
+</style></head><body>
+<div id="bar"></div>
+<div id="stage">
+<section id="cover" class="slide dark center" data-transition="push">
+<div class="orb"></div>
+<div class="orb2"></div>
+<p class="eyebrow r" style="--i:0">SMM · МОБИЛОГРАФИЯ · ОФЛАЙН КУРС</p>
+<div class="head r" style="--i:1">
+<h1>SMM</h1>
+<p class="pill big">маманы</p>
+</div>
+<p class="lead r" style="--i:3">Қазір Инстаграм тек көңіл көтеретін емес — нағыз маркетингтік алаң</p>
+<p class="byline r" style="--i:4">[Атыңыз · @instagram]</p>
+</section>
+<section id="kim" class="slide " data-transition="push">
+<div class="head r" style="--i:0">
+<h2>SMM</h2>
+<p class="pill">маманы</p>
+<h2>кім?</h2>
+</div>
+<div class="split">
+<p class="big r" style="--i:1">Әлеуметтік желілердегі бизнес парақшаларды жүргізетін, сол арқылы бизнеске клиент әкеліп, оның продажасын арттыратын маман.</p>
+<div class="stack">
+<p class="tag r" style="--i:2">ОЛ ЖЕРДЕ АДАМДАР</p>
+<p class="row r" style="--i:3">өз тауарын сатумен</p>
+<p class="row r" style="--i:4">өз қызметін ұсынумен</p>
+<p class="row r" style="--i:5">ақпарат алмасу арқылы</p>
+<p class="row hl r" style="--i:6">табыс тауып жатыр ↗</p>
+</div>
+</div>
+<div class="foot"><p class="fp">SMM маманы · курс</p><div class="pg"></div></div>
+</section>
+<section id="komek" class="slide roomy" data-transition="push">
+<div class="head r" style="--i:0">
+<h2>SMM маманы</h2>
+<p class="pill">көмектеседі</p>
+</div>
+<div class="grid4 fill">
+<div class="card r" style="--i:1"><p class="tag">01</p><h3>Сатуға</h3></div>
+<div class="card hl r" style="--i:2"><p class="tag">02</p><h3>Стратегия құруға</h3></div>
+<div class="card r" style="--i:3"><p class="tag">03</p><h3>Контент жасауға</h3></div>
+<div class="card r" style="--i:4"><p class="tag">04</p><h3>Инстаграм парақшаларды дамытуға</h3></div>
+</div>
+<div class="band ink r" style="--i:5">
+<p class="band-text">Сіздің проекттің <span class="hi">танылуына</span>, клиент келіп, <span class="hi">сатылым болуына</span> әсер етесіз</p>
+</div>
+<div class="foot"><p class="fp">SMM маманы · курс</p><div class="pg"></div></div>
+</section>
+<section id="mindet" class="slide dark" data-transition="push">
+<div class="head r" style="--i:0">
+<h2>SMM маманының</h2>
+<p class="pill">міндеттері</p>
+</div>
+<div class="grid4">
+<div class="card r" style="--i:1">
+<p class="tag">01/</p>
+<p class="lab">Аналитика</p>
+<ul class="bul">
+<li>нарыққа анализ жасау</li>
+<li>конкуренттерге анализ</li>
+<li>мақсатты аудиторияға анализ жасау</li>
+</ul>
+</div>
+<div class="card r" style="--i:2">
+<p class="tag">02/</p>
+<p class="lab">Стратегия</p>
+<ul class="bul">
+<li>брендтің позиционированиесін құрастыру</li>
+<li>бизнес проекттің мақсатын анықтау: не сатамыз? қанша продажа жасау керек?</li>
+<li>мақсатқа жеткізетін әрекеттерді анықтау</li>
+</ul>
+</div>
+<div class="card r" style="--i:3">
+<p class="tag">03/</p>
+<p class="lab">Контент жасау</p>
+<ul class="bul">
+<li>парақшаның визуалды концепциясын құрастыру</li>
+<li>күнделікті сторис салу</li>
+<li>әртүрлі форматта сауатты пост жазу</li>
+<li>рилсқа контент салу</li>
+</ul>
+</div>
+<div class="card r" style="--i:4">
+<p class="tag">04/</p>
+<p class="lab">Парақшаға клиент әкелу</p>
+<ul class="bul">
+<li>тегін / ақылы жолмен продвижение жасау</li>
+<li>ЦА-сы отырған аккаунттарды іздеп, жарнама жасауға келісу</li>
+<li>блогерлерге жарнама беру</li>
+<li>клиент әкелетін вирусты контент жасау</li>
+</ul>
+</div>
+</div>
+<div class="foot"><p class="fp">SMM маманы · курс</p><div class="pg"></div></div>
+</section>
+<section id="etap" class="slide roomy" data-transition="push">
+<div class="head r" style="--i:0">
+<h2>Жұмыс жасау этаптары</h2>
+<p class="pill">002</p>
+</div>
+<div class="split2 fill">
+<div class="card r" style="--i:1">
+<p class="lab">Кері байланыс</p>
+<ul class="bul">
+<li>комментарий мен директке келген сұрақтарға жауап беру</li>
+<li>негативпен жұмыс</li>
+<li>парақшаны тазалау: артық подписчиктерді, пікірге жазылған спам мен жаман сөздерді өшіріп отыру</li>
+</ul>
+</div>
+<div class="card hl r" style="--i:2">
+<p class="tag">ОТЧЕТ ЖАСАУ</p>
+<p class="big">Құрылған стратегияның іске асып жатқанын қадағалау</p>
+</div>
+</div>
+<div class="foot"><p class="fp">SMM маманы · курс</p><div class="pg"></div></div>
+</section>
+<section id="kirmeidi" class="slide lime roomy" data-transition="push">
+<div class="head r" style="--i:0">
+<h2>Міндеттеріне</h2>
+<p class="pill">003</p>
+<h2>не кірмейді</h2>
+</div>
+<div class="split2 fill">
+<div class="card r" style="--i:1">
+<p class="tag">КІРМЕЙДІ</p>
+<p class="q">Таргет жіберу</p>
+</div>
+<div class="card r" style="--i:2">
+<p class="tag">КІРМЕЙДІ</p>
+<p class="q">Графикалық дизайн арқылы макет, сайт жасау</p>
+</div>
+</div>
+<div class="foot"><p class="fp">SMM маманы · курс</p><div class="pg"></div></div>
+</section>
+<section id="klient" class="slide dark roomy" data-transition="push">
+<p class="eyebrow r" style="--i:0">ЦА СЕГМЕНТТЕРІ</p>
+<div class="head r" style="--i:1">
+<h2>Сіздің клиент кім?</h2>
+</div>
+<div class="chips">
+<p class="chip r" style="--i:2">геолокация</p>
+<p class="chip r" style="--i:3">қайда тұрады</p>
+<p class="chip r" style="--i:4">жасы</p>
+<p class="chip r" style="--i:5">жынысы</p>
+<p class="chip r" style="--i:6">болдары</p>
+<p class="chip r" style="--i:7">желаниялары</p>
+<p class="chip r" style="--i:8">қорқынышы</p>
+<p class="chip r" style="--i:9">боль, проблема</p>
+<p class="chip r" style="--i:9">возражения</p>
+</div>
+<div class="foot"><p class="fp">SMM маманы · курс</p><div class="pg"></div></div>
+</section>
+<section id="segment" class="slide dark roomy" data-transition="push">
+<div class="head r" style="--i:0">
+<h2>Аудиторияны сегментке бөлу</h2>
+</div>
+<div class="split2">
+<div class="card r" style="--i:1">
+<p class="tag">/1</p>
+<h3>Кім / не / не үшін</h3>
+<p class="muted">Ниша / услуги: стоматологты жарнамалаймыз</p>
+<div class="chips">
+<p class="chip sm">имплант</p>
+<p class="chip sm">брекет</p>
+<p class="chip sm">чистка</p>
+<p class="chip sm">виниры</p>
+<p class="chip sm">лечение</p>
+<p class="chip sm">консультация</p>
+</div>
+</div>
+<div class="card r" style="--i:2">
+<p class="tag">/2</p>
+<h3>Әр услуганың клиенті кім?</h3>
+<p class="muted small">Мысалы, виниры:</p>
+<ul class="bul">
+<li>25 жастан жоғары</li>
+<li>самооценка көтеру үшін</li>
+<li>идеальный тіс қалайтындар</li>
+<li>актерлер, көпшілік ортада жүретіндер</li>
+</ul>
+<p class="small">Не үшін қызметті алу керек? Ақпаратты қайдан аламыз? <span class="hi">Брифинг, Google, TikTok, комменттер</span></p>
+</div>
+</div>
+<div class="foot"><p class="fp">SMM маманы · курс</p><div class="pg"></div></div>
+</section>
+<section id="pozit" class="slide roomy" data-transition="push">
+<div class="head r" style="--i:0">
+<h2>Позиционирование</h2>
+</div>
+<div class="stack">
+<div class="qrow r" style="--i:1"><p class="qn">01</p><p class="q">Мен кімге көмектесемін?</p></div>
+<div class="qrow r" style="--i:2"><p class="qn">02</p><p class="q">Қандай проблеманы шешеміз?</p></div>
+<div class="qrow r" style="--i:3"><p class="qn">03</p><p class="q">Қандай тәсілмен?</p></div>
+</div>
+<div class="band ink r" style="--i:4">
+<p class="band-text">Адам сіздің парақшаңызға кіргенде <span class="hi">«НЕ ҮШІН?»</span> деген сұраққа жауап алуы керек</p>
+</div>
+<div class="foot"><p class="fp">SMM маманы · курс</p><div class="pg"></div></div>
+</section>
+<section id="konkur" class="slide dark" data-transition="push">
+<p class="eyebrow r" style="--i:0">КОНКУРЕНТ — СЕНІҢ ДОСЫҢ</p>
+<div class="head r" style="--i:1">
+<h2>Конкуренттерге анализ</h2>
+</div>
+<div style="display:grid; grid-template-columns:2fr 1fr; gap:48px; align-items:stretch">
+<div class="split2">
+<p class="item r" style="--i:2">Сенің салаңдағы парақшаларды зертте</p>
+<p class="item r" style="--i:3">Қандай офферлер / ұсыныстар қолданады</p>
+<p class="item r" style="--i:4">+/− жаз: артықшылығын қалай көрсетеді</p>
+<p class="item r" style="--i:5">Неге клиенттер дәл осы парақшаны таңдайды</p>
+<p class="item r" style="--i:6">Бағалары қандай, заявканы қанша уақытта өңдейді</p>
+<p class="item r" style="--i:7">Просмотры көп рилстерге анализ</p>
+<p class="item wide r" style="--i:8">Сохраненныйды ашамыз, өзімізге сұрақ қоямыз: неге мына рилс өтті? Мен неге соңына дейін қарадым? Неге осынша просмотр жинап жатыр? Не нәрсені көрсетіп жатыр?</p>
+</div>
+<div class="card hl r" style="--i:9; justify-content:center">
+<p class="stat" style="color:#15170F">5–6</p>
+<p class="big">конкурентті дәл осылай зерттеу керек</p>
+</div>
+</div>
+<div class="foot"><p class="fp">SMM маманы · курс</p><div class="pg"></div></div>
+</section>
+<section id="upak" class="slide " data-transition="push" style="gap:40px">
+<div class="head r" style="--i:0">
+<h2>Парақша</h2>
+<p class="pill">упаковкасы</p>
+</div>
+<p class="big muted r" style="--i:1">Парақшаңыз — сіздің әлеуметтік желідегі визитная карточкаңыз</p>
+<div class="grid3">
+<div class="card r" style="--i:2">
+<p class="tag">01</p>
+<h3>Имя / пользователь</h3>
+<p class="small">Никнейм — бизнестің атауы:</p>
+<ul class="bul">
+<li>айтылуы оңай</li>
+<li>естігенде есте қалатындай</li>
+<li>қысқа, анық</li>
+<li>құлаққа жағымды</li>
+</ul>
+</div>
+<div class="card r" style="--i:3">
+<p class="tag">02</p>
+<h3>Аватарка, био</h3>
+<ul class="bul">
+<li>Авада тауардың фотосы не логотип</li>
+<li>Бренд жасасаңыз — авада міндетті түрде логотип</li>
+<li>Тауардың түрі, түсі анық көрінуі керек</li>
+<li>Логотипті Canva, Picsart арқылы жасауға болады</li>
+</ul>
+</div>
+<div class="card hl r" style="--i:4">
+<p class="tag">03</p>
+<h3>Актуальный / визуал</h3>
+<ol class="bul">
+<li>Мен туралы</li>
+<li>Кейстер / нәтижелер</li>
+<li>Қызметтер, прайс</li>
+<li>Пікірлер</li>
+</ol>
+</div>
+</div>
+<div class="foot"><p class="fp">SMM маманы · курс</p><div class="pg"></div></div>
+</section>
+<section id="nik" class="slide " data-transition="push">
+<div class="head r" style="--i:0">
+<h2>Никнейм</h2>
+<p class="pill">дұрыс / дұрыс емес</p>
+</div>
+<div class="split2">
+<div class="card r" style="--i:1">
+<p class="tag">ДҰРЫС ✓</p>
+<p class="small muted">1. Толық аты-жөні</p>
+<p class="handle">@Botakoz_Karakesek</p>
+<p class="small muted">2. Бренд атауы</p>
+<p class="handle">@mogu_jewelery</p>
+<p class="small muted">3. Қаламен байланысты</p>
+<p class="handle">@tort_kazaly</p>
+<p class="small muted">4. Айналысатын нишасы</p>
+<p class="handle">@Botakoz_smm</p>
+</div>
+<div class="stack">
+<div class="card r" style="--i:2; background:#15170F; color:#F4F5EF">
+<p class="tag" style="color:#FF8A65">ДҰРЫС ЕМЕС ✕</p>
+<p class="handle">@hostel73636.2</p>
+<p class="handle">@dombyyyra_mektebi</p>
+<p class="handle">@torty_aktau_tatto_torttar</p>
+</div>
+<div class="band r" style="--i:3">
+<p class="small"><b>Пользователь атауы</b> (аватар астындағы жуан шрифт) — адамдар поискте іздеген кезде шығатындай болуы шарт!</p>
+</div>
+</div>
+</div>
+<div class="foot"><p class="fp">SMM маманы · курс</p><div class="pg"></div></div>
+</section>
+<section id="shapka" class="slide dark" data-transition="push" style="gap:40px">
+<div class="head r" style="--i:0">
+<h2>Шапка профиля</h2>
+</div>
+<div class="grid3">
+<div class="card r" style="--i:1">
+<h3>Шапкадан нені түсіну қажет?</h3>
+<ul class="bul">
+<li>Сіз кімсіз?</li>
+<li>Сіз не сатасыз?</li>
+<li>Сізден қалай сатып алады?</li>
+<li>Неге сіздерге сену керек?</li>
+<li>Неге дәл сізден сатып алу керек?</li>
+</ul>
+</div>
+<div class="card r" style="--i:2">
+<p class="lab">Рационалды құндылық</p>
+<p class="small">Нақты фактілер: тәжірибе, баға, сандар</p>
+<ul class="bul">
+<li>280 бақытты клиент</li>
+<li>15 жыл тәжірибе</li>
+<li>970-тен астам оқушы</li>
+<li>Бізде баға 12 000 тг-ден басталады</li>
+</ul>
+</div>
+<div class="card r" style="--i:3">
+<p class="lab">Эмоционалды құндылық</p>
+<p class="small">Адамдар сезінетін эмоция: қуаныш, өзіне сенімділік</p>
+<ul class="bul">
+<li>Территория стиля</li>
+<li>Репетитор емес — сіздің балаңыздың болашағы</li>
+</ul>
+</div>
+</div>
+<div class="grid4 r" style="--i:4">
+<p class="chip sm">1 қатар: тезис</p>
+<p class="chip sm">2 қатар: рационалды</p>
+<p class="chip sm">3 қатар: эмоционалды</p>
+<p class="chip sm">4 қатар: байланыс сілтемесі</p>
+</div>
+<div class="foot"><p class="fp">SMM маманы · курс</p><div class="pg"></div></div>
+</section>
+<section id="highlights" class="slide roomy" data-transition="push">
+<div class="head r" style="--i:0">
+<h2>Highlights толтыру</h2>
+</div>
+<div style="display:grid; grid-template-columns:3fr 2fr; gap:64px; align-items:start">
+<div class="stack">
+<p class="big r" style="--i:1">Бизнес-аккта болуы тиіс хайлайттар:</p>
+<div class="chips">
+<p class="chip r" style="--i:2">бренд жайлы</p>
+<p class="chip r" style="--i:2">жұмыс процесі</p>
+<p class="chip r" style="--i:3">каталог (тауарлар)</p>
+<p class="chip r" style="--i:3">доставка</p>
+<p class="chip r" style="--i:4">команда</p>
+<p class="chip r" style="--i:4">отзыв</p>
+<p class="chip r" style="--i:5">прайс (баға)</p>
+<p class="chip r" style="--i:5">лайф контент</p>
+<p class="chip r" style="--i:6">изюминкалар</p>
+</div>
+</div>
+<div class="card hl r" style="--i:4">
+<p class="tag">ТАПСЫРМА</p>
+<h3>Жаңа аккаунт аш</h3>
+<ul class="bul">
+<li>тек өз нишаңдағы адамдарға жазыл</li>
+<li>не залетает?</li>
+<li>неге атып кетті?</li>
+</ul>
+<p class="big"><b>Бұл аккаунт — сенің басты тренерің</b></p>
+</div>
+</div>
+<div class="foot"><p class="fp">SMM маманы · курс</p><div class="pg"></div></div>
+</section>
+<section id="kontent" class="slide lime roomy" data-transition="push">
+<div class="head r" style="--i:0">
+<h2>Контент план</h2>
+</div>
+<div class="grid3 fill">
+<div class="card r" style="--i:1">
+<p class="stat">2 апта</p>
+<p class="big">идеалда 2 аптаға құру</p>
+</div>
+<div class="card r" style="--i:2">
+<p class="stat">5 рилс</p>
+<p class="big">аптасына, мысалы</p>
+</div>
+<div class="card r" style="--i:3">
+<p class="stat">5–10</p>
+<p class="big">сторис күніне</p>
+</div>
+</div>
+<div class="stack r" style="--i:4">
+<p class="tag">ӘР РИЛСҚА ЖАЗАМЫЗ</p>
+<div class="chips">
+<p class="chip">күні</p>
+<p class="chip">формат</p>
+<p class="chip">тема</p>
+<p class="chip">сценарий</p>
+<p class="chip">локация</p>
+<p class="chip">реквизит</p>
+</div>
+</div>
+<div class="foot"><p class="fp">SMM маманы · курс</p><div class="pg"></div></div>
+</section>
+<section id="scenariy" class="slide dark roomy" data-transition="push">
+<div class="head r" style="--i:0">
+<h2>Рилсқа сценарий жазу</h2>
+</div>
+<div class="grid4 fill">
+<div class="card r" style="--i:1">
+<p class="num">01</p>
+<h3>Хук</h3>
+<p class="muted">3 секундта назар ұстау</p>
+</div>
+<div class="card r" style="--i:2">
+<p class="num">02</p>
+<h3>Проблема</h3>
+<p class="muted">боль</p>
+</div>
+<div class="card r" style="--i:3">
+<p class="num">03</p>
+<h3>Шешім</h3>
+<p class="muted">решение</p>
+</div>
+<div class="card hl r" style="--i:4">
+<p class="num">04</p>
+<h3>Call to action</h3>
+<p>әрекетке шақыру</p>
+</div>
+</div>
+<div class="foot"><p class="fp">SMM маманы · курс</p><div class="pg"></div></div>
+</section>
+<section id="rahmet" class="slide dark center">
+<div class="orb"></div>
+<div class="orb2"></div>
+<p class="eyebrow r" style="--i:0">SMM · МОБИЛОГРАФИЯ · ОФЛАЙН КУРС</p>
+<h1 class="r" style="--i:1">Рахмет!</h1>
+<div class="head r" style="--i:2">
+<p class="pill big">сұрақтар?</p>
+</div>
+<p class="byline r" style="--i:4">[Байланыс: @instagram · телефон]</p>
+</section>
+</div>
+<div id="ui"><button id="prev" aria-label="Алдыңғы">←</button><span id="cnt"></span><button id="next" aria-label="Келесі">→</button><span class="sp"></span><button id="fs">⛶ Толық экран</button></div>
+<script>
+const S=[...document.querySelectorAll('section.slide')],stage=document.getElementById('stage');let i=0;
+function fit(){const k=Math.min(innerWidth/1920,innerHeight/1080);stage.style.transform=`scale(${k}) translate(-50%,-50%)`;stage.style.transformOrigin='0 0';stage.style.left='50%';stage.style.top='50%';stage.style.transform=`translate(-50%,-50%) scale(${k})`;stage.style.transformOrigin='center center';}
+function go(n){n=Math.max(0,Math.min(S.length-1,n));S.forEach((s,j)=>{s.classList.toggle('active',j===n);s.classList.toggle('past',j<n);});i=n;document.getElementById('cnt').textContent=(n+1)+' / '+S.length;document.getElementById('bar').style.width=((n+1)/S.length*100)+'%';history.replaceState(null,'','#'+(n+1));}
+addEventListener('resize',fit);fit();
+go((parseInt(location.hash.slice(1))||1)-1);
+addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown','PageDown',' ','Enter'].includes(e.key)){e.preventDefault();go(i+1)}else if(['ArrowLeft','ArrowUp','PageUp','Backspace'].includes(e.key)){e.preventDefault();go(i-1)}else if(e.key==='Home')go(0);else if(e.key==='End')go(S.length-1);else if(e.key==='f')fs();});
+document.getElementById('next').onclick=e=>{e.stopPropagation();go(i+1)};document.getElementById('prev').onclick=e=>{e.stopPropagation();go(i-1)};
+function fs(){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+document.getElementById('fs').onclick=e=>{e.stopPropagation();fs()};
+document.getElementById('stage').addEventListener('click',e=>{go(e.clientX<innerWidth/3?i-1:i+1)});
+let tx=null;addEventListener('touchstart',e=>{document.body.classList.add('touch');tx=e.touches[0].clientX},{passive:true});
+addEventListener('touchend',e=>{if(tx===null)return;const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>40)go(d<0?i+1:i-1);tx=null});
+</script></body></html>
