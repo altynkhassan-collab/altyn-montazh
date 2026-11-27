@@ -11,8 +11,17 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "sait-jasau", "scripts"))
 import sait as S   # Cloudflare көмекшілері (account, subdomain, api, wr, slug)
 
-FIELDS = ["COURSE_NAME", "COURSE_DESC", "PRICE", "KASPI_URL", "KASPI_PHONE", "KASPI_NAME", "ADMIN_ID", "CHANNEL_ID"]
-OPTIONAL = {"KASPI_URL", "KASPI_PHONE", "KASPI_NAME"}
+FIELDS = ["COURSE_NAME", "COURSE_DESC", "PRICE", "KASPI_URL", "KASPI_PHONE", "KASPI_NAME", "ADMIN_ID", "CHANNEL_ID",
+          "TARIFFS", "FEEDBACK_CHAT_ID"]
+OPTIONAL = {"KASPI_URL", "KASPI_PHONE", "KASPI_NAME", "TARIFFS", "FEEDBACK_CHAT_ID"}
+
+def missing(c):
+    miss = [k for k in FIELDS if not c.get(k) and k not in OPTIONAL and not (k == "PRICE" and c.get("TARIFFS"))]
+    if not (c.get("KASPI_URL") or c.get("KASPI_PHONE")): miss.append("KASPI_URL немесе KASPI_PHONE")
+    if any(t.get("feedback") for t in c.get("TARIFFS") or []) and not c.get("FEEDBACK_CHAT_ID"): miss.append("FEEDBACK_CHAT_ID")
+    return miss
+
+def val(v): return json.dumps(v, ensure_ascii=False) if not isinstance(v, str) else v
 
 def cfg_path(name): return os.path.join("Боттар", name, "config.json")
 
@@ -38,9 +47,9 @@ def publish(name):
             ns = r["result"]["id"]
         m["ns"] = ns; json.dump(m, open(meta, "w"))
     subprocess.run(["cp", os.path.join(HERE, "worker.js"), os.path.join(work, "worker.js")], check=True)
-    vars_ = "".join(f'{k} = {json.dumps(str(c.get(k, "")), ensure_ascii=False)}\n' for k in FIELDS if c.get(k))
+    vars_ = "".join(f'{k} = {json.dumps(val(c.get(k)), ensure_ascii=False)}\n' for k in FIELDS if c.get(k))
     open(os.path.join(work, "wrangler.toml"), "w").write(
-        f'name = "{wname}"\nmain = "worker.js"\ncompatibility_date = "2025-09-01"\nworkers_dev = true\npreview_urls = false\n\n'
+        f'name = "{wname}"\nmain = "worker.js"\ncompatibility_date = "2025-09-01"\nworkers_dev = true\npreview_urls = false\n\n[triggers]\ncrons = ["0 4 * * *"]\n\n'
         f'[[kv_namespaces]]\nbinding = "SITE"\nid = "{m["ns"]}"\n\n[vars]\n{vars_}')
     r = S.wr(["deploy"], work, acc)
     if r.returncode: print("❌ жариялау қатесі:", (r.stdout + r.stderr)[-600:]); sys.exit(2)
@@ -50,8 +59,7 @@ def publish(name):
         if code == "200": break
         time.sleep(10)
     json.dump({**m, "url": url}, open(meta, "w"))
-    miss = [k for k in FIELDS if not c.get(k) and k not in OPTIONAL]
-    if not (c.get("KASPI_URL") or c.get("KASPI_PHONE")): miss.append("KASPI_URL немесе KASPI_PHONE")
+    miss = missing(c)
     print("✅ бот жарияланды:", url)
     print("🔑 токен қою беті (бір рет):", url + "/setup")
     if miss: print("⏳ әлі толтырылмаған:", ", ".join(miss))
@@ -64,8 +72,7 @@ def status(name):
     print("сілтеме:", url)
     print("токен:", "✅ қосылған" if "Бот қосылды" in r or "бұрын қойылған" in r else "❌ әлі қойылмаған — " + url + "/setup")
     c = json.load(open(cfg_path(name)))
-    miss = [k for k in FIELDS if not c.get(k) and k not in OPTIONAL]
-    if not (c.get("KASPI_URL") or c.get("KASPI_PHONE")): miss.append("KASPI_URL немесе KASPI_PHONE")
+    miss = missing(c)
     print("баптаулар:", "✅ толық" if not miss else "⏳ жоқ: " + ", ".join(miss))
 
 if __name__ == "__main__":
