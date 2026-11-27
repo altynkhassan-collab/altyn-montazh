@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="kk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Айдана & Ерлан — үйлену тойына шақыру</title>
+<meta name="description" content="Айдана мен Ерланның үйлену тойы · 25.12.2026 · Атырау, Diamond мейрамханасы">
+<meta property="og:title" content="Айдана & Ерлан — үйлену тойына шақыру">
+<meta property="og:description" content="25 желтоқсан 2026 · сағ. 19:00 · Diamond мейрамханасы, Атырау">
+<meta property="og:image" content="hands2.jpg">
+<meta name="theme-color" content="#f3e9dc">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Marck+Script&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f5ece1; --bg2:#efe2d2; --ink:#4a3a2e; --soft:#8a7462;
+  --gold:#b8893f; --gold2:#e2c07a; --gold3:#8a6424; --card:#fffaf3;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{background:var(--bg);color:var(--ink);font-family:"Cormorant Garamond",Georgia,serif;font-size:19px;line-height:1.5;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.wrap{max-width:480px;margin:0 auto;position:relative;background:linear-gradient(180deg,#fbf4ea 0%,var(--bg) 40%,var(--bg2) 100%);overflow:hidden}
+.script{font-family:"Marck Script","Cormorant Garamond",cursive;font-weight:400}
+.gold{background:linear-gradient(100deg,var(--gold3),var(--gold2) 45%,var(--gold) 60%,var(--gold3));-webkit-background-clip:text;background-clip:text;color:transparent}
+section{position:relative;padding:56px 24px;text-align:center}
+h2{font-family:"Marck Script",cursive;font-weight:400;font-size:44px;line-height:1.1;margin-bottom:14px}
+.cap{letter-spacing:.28em;text-transform:uppercase;font-size:13px;font-weight:600;color:var(--soft)}
+.divider{display:block;width:180px;height:22px;margin:18px auto}
+.reveal{opacity:0;transform:translateY(26px);transition:opacity 1s ease,transform 1s ease}
+.reveal.on{opacity:1;transform:none}
+
+/* 1 — жүрек */
+.intro{min-height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px 60px}
+.intro .names{font-size:50px;line-height:1;margin:6px 0 4px}
+.intro .names i{font-style:normal;font-size:34px;padding:0 10px}
+.heartbox{position:relative;width:300px;height:280px;margin:22px auto 10px}
+.under{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding-top:6px}
+.under .t{font-size:15px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--soft);margin-bottom:4px}
+.under .d{font-size:46px;font-weight:500;letter-spacing:.06em;color:var(--ink)}
+.under .d span{color:var(--gold);padding:0 6px;font-weight:400}
+.under .s{font-size:18px;font-style:italic;color:var(--soft)}
+#scratch{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:pointer;transition:opacity 1s ease}
+#scratch.gone{opacity:0;pointer-events:none}
+.hint{font-size:17px;font-style:italic;color:var(--soft);transition:opacity .6s}
+.hint b{display:inline-block;animation:tap 1.6s infinite}
+@keyframes tap{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.savedate{margin-top:26px;font-size:15px;letter-spacing:.42em;font-weight:600;color:var(--ink)}
+.savedate em{font-family:"Marck Script",cursive;letter-spacing:0;font-size:26px;font-style:normal;color:var(--gold);padding:0 6px;text-transform:none}
+.scroll{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);font-size:13px;letter-spacing:.2em;color:var(--soft);opacity:.8}
+.scroll:after{content:"";display:block;width:1px;height:28px;background:var(--gold);margin:8px auto 0;animation:line 2s infinite}
+@keyframes line{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.spark{position:fixed;top:-12px;width:7px;height:7px;border-radius:50%;background:radial-gradient(circle,#fff6d8,var(--gold2) 45%,var(--gold) 80%);pointer-events:none;z-index:50;animation:fall linear forwards}
+@keyframes fall{to{transform:translate(var(--dx),105vh) rotate(540deg);opacity:.2}}
+
+/* фото */
+.photo{padding:0}
+.photo img{display:block;width:100%;height:auto}
+.photo.fade:before,.photo.fade:after{content:"";position:absolute;left:0;right:0;height:90px;z-index:1;pointer-events:none}
+.photo.fade:before{top:0;background:linear-gradient(var(--bg),transparent)}
+.photo.fade:after{bottom:0;background:linear-gradient(transparent,var(--bg))}
+.arch{width:78%;margin:0 auto;border-radius:200px 200px 14px 14px;overflow:hidden;box-shadow:0 18px 40px -18px rgba(90,60,30,.45);border:5px solid #fff}
+.arch img{display:block;width:100%}
+
+/* шақыру */
+.invite p{font-size:21px;line-height:1.55}
+.invite .lead{font-style:italic;font-size:22px;margin-bottom:14px;color:var(--soft)}
+.invite .who{font-size:50px;line-height:1.15;margin:14px 0}
+
+/* санақ */
+.count{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px}
+.count div{background:var(--card);border:1px solid rgba(184,137,63,.35);border-radius:16px;padding:14px 0 10px;box-shadow:0 10px 24px -16px rgba(90,60,30,.5)}
+.count b{display:block;font-size:34px;font-weight:600;line-height:1;color:var(--gold3)}
+.count small{font-size:13px;letter-spacing:.08em;color:var(--soft)}
+
+/* күнтізбе */
+.cal{background:var(--card);border-radius:22px;padding:22px 16px 18px;margin-top:26px;border:1px solid rgba(184,137,63,.3)}
+.cal .m{font-size:30px;margin-bottom:8px}
+.cal .g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;font-size:18px}
+.cal .g .h{font-size:13px;font-weight:600;color:var(--soft);letter-spacing:.05em;padding-bottom:4px}
+.cal .g span{height:36px;display:flex;align-items:center;justify-content:center;position:relative}
+.cal .g .x{color:#fff;font-weight:600;z-index:0}
+.cal .g .x:before{content:"";position:absolute;z-index:-1;width:40px;height:40px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23e2c07a'/%3E%3Cstop offset='1' stop-color='%238a6424'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23g)' d='M12 21s-7.5-4.6-9.6-9.1C.9 8.5 3 4.5 6.8 4.5c2.2 0 3.6 1.2 5.2 3.1 1.6-1.9 3-3.1 5.2-3.1 3.8 0 5.9 4 4.4 7.4C19.5 16.4 12 21 12 21z'/%3E%3C/svg%3E") center/contain no-repeat;animation:beat 1.4s infinite}
+@keyframes beat{0%,100%{transform:scale(1)}15%{transform:scale(1.15)}30%{transform:scale(1)}45%{transform:scale(1.1)}}
+.when{margin-top:20px;font-size:22px}
+.when b{font-size:34px;color:var(--gold3);font-weight:600}
+
+/* орны */
+.place{color:#fff;padding:80px 24px;background:#3a2418}
+.place .bgimg{position:absolute;inset:0;background:url(yurt.jpg) center/cover}
+.place .bgimg:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,var(--bg) 0%,rgba(40,20,10,.55) 22%,rgba(40,20,10,.7) 78%,var(--bg2) 100%)}
+.place>*:not(.bgimg){position:relative;z-index:1}
+.place .cap{color:#f3dcb0}
+.place h3{font-family:"Marck Script",cursive;font-weight:400;font-size:50px;line-height:1.1;margin:10px 0 6px;color:#ffe7b3;text-shadow:0 2px 14px rgba(0,0,0,.4)}
+.place p{font-size:21px;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-top:22px;padding:15px 30px;border-radius:40px;border:0;font:600 16px "Cormorant Garamond",serif;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;color:#fff;background:linear-gradient(100deg,var(--gold3),var(--gold) 50%,var(--gold2));box-shadow:0 10px 26px -10px rgba(138,100,36,.8);cursor:pointer}
+.btn.ghost{background:rgba(255,255,255,.14);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border:1px solid rgba(255,231,179,.7)}
+
+/* иелері */
+.hosts .who{font-size:46px;line-height:1.2;margin-top:6px}
+
+/* жауап */
+.rsvp form{background:var(--card);border-radius:22px;padding:26px 20px;margin-top:20px;text-align:left;border:1px solid rgba(184,137,63,.3);box-shadow:0 18px 40px -26px rgba(90,60,30,.6)}
+.rsvp label.f{display:block;font-size:15px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--soft);margin-bottom:8px}
+.rsvp input[type=text]{width:100%;padding:13px 14px;border:1px solid rgba(184,137,63,.45);border-radius:12px;font:20px "Cormorant Garamond",serif;background:#fff;color:var(--ink);margin-bottom:18px}
+.rsvp .opt{display:flex;align-items:center;gap:12px;padding:10px 4px;font-size:20px;cursor:pointer}
+.rsvp .opt input{appearance:none;-webkit-appearance:none;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--gold);flex:none;display:grid;place-content:center}
+.rsvp .opt input:checked:before{content:"";width:12px;height:12px;border-radius:50%;background:var(--gold)}
+.rsvp .btn{width:100%;margin-top:18px}
+.rsvp .err{color:#a33;font-size:16px;min-height:22px;text-align:center;margin-top:8px}
+
+footer{padding:40px 24px 120px;text-align:center}
+footer .script{font-size:44px}
+footer p{color:var(--soft);font-style:italic;font-size:19px}
+
+/* музыка */
+#mus{position:fixed;right:max(16px,calc(50% - 224px));bottom:20px;z-index:60;width:54px;height:54px;border-radius:50%;border:0;cursor:pointer;background:linear-gradient(135deg,var(--gold2),var(--gold3));box-shadow:0 8px 22px -6px rgba(90,60,30,.7);display:grid;place-items:center}
+#mus svg{width:24px;height:24px;fill:#fff}
+#mus.play{animation:spin 4s linear infinite}
+#mus:not(.play):after{content:"";position:absolute;width:30px;height:2px;background:#fff;transform:rotate(-45deg);border-radius:2px}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}#mus.play{animation:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="gl" x1="0" x2="1"><stop offset="0" stop-color="#8a6424" stop-opacity="0"/><stop offset=".5" stop-color="#d9b46a"/><stop offset="1" stop-color="#8a6424" stop-opacity="0"/></linearGradient>
+    <symbol id="div" viewBox="0 0 180 22"><path d="M2 11 C40 11 55 3 75 9 C85 12 88 15 90 11 C92 7 95 10 105 13 C125 19 140 11 178 11" fill="none" stroke="url(#gl)" stroke-width="1.6"/><path d="M90 4 l3 7 -3 7 -3 -7z" fill="#c9a058"/></symbol>
+  </defs>
+</svg>
+
+<!-- 1. Жүрек -->
+<section class="intro" id="top">
+  <div class="cap">Үйлену тойына шақыру</div>
+  <div class="names script gold">Айдана<i>&amp;</i>Ерлан</div>
+  <div class="heartbox">
+    <div class="under">
+      <div class="t">Той күні</div>
+      <div class="d">25<span>|</span>12<span>|</span>2026</div>
+      <div class="s">жұма · сағ. 19:00</div>
+    </div>
+    <canvas id="scratch" aria-label="Жүректі өшіріңіз"></canvas>
+  </div>
+  <div class="hint" id="hint"><b>👆</b> Жүректі саусағыңызбен өшіріңіз</div>
+  <div class="savedate">SAVE <em>the</em> DATE</div>
+  <div class="scroll">ТӨМЕН</div>
+</section>
+
+<!-- 2. Фото -->
+<section class="photo fade reveal"><img src="hands1.jpg" alt="Айдана мен Ерлан"></section>
+
+<!-- 3. Шақыру -->
+<section class="invite reveal">
+  <svg class="divider"><use href="#div"/></svg>
+  <p class="lead">Құрметті ағайын-туыс, құда-жекжат, дос-жаран!</p>
+  <p>Сіздерді ұлымыз</p>
+  <div class="who script gold">Ерлан мен<br>Айдананың</div>
+  <p>үйлену тойына арналған салтанатты ақ дастарханымыздың қадірлі қонағы болуға шақырамыз!</p>
+  <svg class="divider"><use href="#div"/></svg>
+</section>
+
+<section class="reveal" style="padding-top:10px"><div class="arch"><img src="hands2.jpg" alt=""></div></section>
+
+<!-- 4. Санақ + күнтізбе -->
+<section class="reveal">
+  <div class="cap">Тойға дейін</div>
+  <div class="count">
+    <div><b id="cd">0</b><small>күн</small></div>
+    <div><b id="ch">0</b><small>сағат</small></div>
+    <div><b id="cm">0</b><small>минут</small></div>
+    <div><b id="cs">0</b><small>секунд</small></div>
+  </div>
+  <div class="cal">
+    <div class="m script gold">Желтоқсан 2026</div>
+    <div class="g" id="cal"></div>
+  </div>
+  <div class="when">Той басталады: <b>19:00</b></div>
+</section>
+
+<!-- 5. Орны -->
+<section class="place reveal">
+  <div class="bgimg"></div>
+  <div class="cap">Той өтетін орын</div>
+  <h3>Diamond мейрамханасы</h3>
+  <p>Атырау қаласы,<br>Сырым Датов көшесі, 143а</p>
+  <a class="btn ghost" href="https://2gis.kz/atyrau/geo/70000001064866860" target="_blank" rel="noopener">📍 Картадан ашу</a>
+</section>
+
+<!-- 6. Той иелері -->
+<section class="hosts reveal">
+  <svg class="divider"><use href="#div"/></svg>
+  <div class="cap">Той иелері</div>
+  <div class="who script gold">Асхат – Нұрлы</div>
+  <svg class="divider"><use href="#div"/></svg>
+</section>
+
+<section class="reveal" style="padding-top:0"><div class="arch"><img src="hands3.jpg" alt=""></div></section>
+
+<!-- 7. Жауап -->
+<section class="rsvp reveal">
+  <h2 class="gold">Тойға келесіз бе?</h2>
+  <p style="font-size:19px;color:var(--soft)">Жауабыңызды алдын ала жіберсеңіз, біз үшін үлкен қуаныш</p>
+  <form id="f">
+    <label class="f" for="nm">Аты-жөніңіз</label>
+    <input type="text" id="nm" placeholder="Мысалы: Асқар, Әсел" autocomplete="name">
+    <label class="opt"><input type="radio" name="a" value="Иә, келемін" checked> Иә, келемін</label>
+    <label class="opt"><input type="radio" name="a" value="Жұбайыммен келемін"> Жұбайыммен келемін</label>
+    <label class="opt"><input type="radio" name="a" value="Өкінішке қарай, келе алмаймын"> Өкінішке қарай, келе алмаймын</label>
+    <button class="btn" type="submit">Жауап жіберу</button>
+    <div class="err" id="err"></div>
+  </form>
+</section>
+
+<footer class="reveal">
+  <div class="script gold">Сіздерді күтеміз!</div>
+  <p>Айдана &amp; Ерлан</p>
+</footer>
+</div>
+
+<button id="mus" aria-label="Музыка"><svg viewBox="0 0 24 24"><path d="M9 18.5a3 3 0 1 1-2-2.83V5l12-2v12.5a3 3 0 1 1-2-2.83V6.4L9 7.8z"/></svg></button>
+<audio id="au" src="music.mp3" loop preload="auto"></audio>
+
+<script>
+const WA = ""; // WhatsApp нөмірі: 7XXXXXXXXXX
+const T = new Date("2026-12-25T19:00:00+05:00");
+
+/* музыка */
+const au = document.getElementById("au"), mb = document.getElementById("mus");
+let started = false;
+function play(){ au.play().then(()=>mb.classList.add("play")).catch(()=>{}); }
+function first(){ if(started) return; started = true; play(); }
+["pointerdown","touchstart","keydown"].forEach(e=>addEventListener(e, first, {once:true, passive:true}));
+mb.addEventListener("click", e=>{ e.stopPropagation(); started = true;
+  if(au.paused) play(); else { au.pause(); mb.classList.remove("play"); } });
+
+/* жүрек */
+const cv = document.getElementById("scratch"), ctx = cv.getContext("2d");
+let W, H, done = false;
+function heart(c, w, h){
+  c.beginPath();
+  c.moveTo(w/2, h*0.97);
+  c.bezierCurveTo(w*0.06, h*0.68, -w*0.02, h*0.30, w*0.20, h*0.12);
+  c.bezierCurveTo(w*0.34, h*0.01, w*0.46, h*0.06, w/2, h*0.21);
+  c.bezierCurveTo(w*0.54, h*0.06, w*0.66, h*0.01, w*0.80, h*0.12);
+  c.bezierCurveTo(w*1.02, h*0.30, w*0.94, h*0.68, w/2, h*0.97);
+  c.closePath();
+}
+function draw(){
+  const r = devicePixelRatio || 1; W = cv.clientWidth; H = cv.clientHeight;
+  cv.width = W*r; cv.height = H*r; ctx.setTransform(r,0,0,r,0,0);
+  heart(ctx, W, H);
+  const g = ctx.createLinearGradient(0,0,W,H);
+  g.addColorStop(0,"#f3dc9c"); g.addColorStop(.35,"#c9993f"); g.addColorStop(.6,"#e9c97e"); g.addColorStop(1,"#9a7128");
+  ctx.fillStyle = g; ctx.fill();
+  ctx.save(); ctx.clip();
+  for(let i=0;i<1400;i++){
+    const x=Math.random()*W, y=Math.random()*H, s=Math.random()*1.8+.4;
+    ctx.fillStyle = Math.random()<.5 ? "rgba(255,248,220,"+(Math.random()*.8+.2)+")" : "rgba(120,80,20,"+(Math.random()*.35)+")";
+    ctx.fillRect(x,y,s,s);
+  }
+  ctx.restore();
+}
+draw();
+let last = null;
+function pos(e){ const b = cv.getBoundingClientRect(); return [e.clientX-b.left, e.clientY-b.top]; }
+function rub(p){
+  ctx.globalCompositeOperation = "destination-out"; ctx.lineCap = "round"; ctx.lineWidth = 46;
+  ctx.beginPath(); ctx.moveTo(...(last||p)); ctx.lineTo(...p); ctx.stroke();
+  ctx.beginPath(); ctx.arc(p[0],p[1],23,0,7); ctx.fill();
+  ctx.globalCompositeOperation = "source-over"; last = p;
+}
+function check(){
+  if(done) return;
+  const d = ctx.getImageData(0,0,cv.width,cv.height).data; let a=0,t=0;
+  for(let i=3;i<d.length;i+=64){ t++; if(d[i]>0) a++; }
+  if(a/t < 0.22) open();
+}
+function open(){
+  done = true; cv.classList.add("gone"); document.getElementById("hint").style.opacity = 0;
+  for(let i=0;i<70;i++) setTimeout(()=>{
+    const s = document.createElement("i"); s.className="spark";
+    s.style.left = Math.random()*100+"vw"; s.style.setProperty("--dx",(Math.random()*80-40)+"px");
+    s.style.animationDuration = (2.5+Math.random()*2.5)+"s"; const z=4+Math.random()*6; s.style.width=s.style.height=z+"px";
+    document.body.appendChild(s); setTimeout(()=>s.remove(),5200);
+  }, i*35);
+}
+cv.addEventListener("pointerdown", e=>{ cv.setPointerCapture(e.pointerId); last=null; rub(pos(e)); });
+cv.addEventListener("pointermove", e=>{ if(e.buttons||e.pointerType==="touch") rub(pos(e)); });
+cv.addEventListener("pointerup", ()=>{ last=null; check(); });
+cv.addEventListener("pointercancel", ()=>{ last=null; check(); });
+
+/* кері санақ */
+const z = n=>String(n).padStart(2,"0");
+function tick(){
+  let s = Math.max(0, Math.floor((T - Date.now())/1000));
+  cd.textContent = Math.floor(s/86400); ch.textContent = z(Math.floor(s%86400/3600));
+  cm.textContent = z(Math.floor(s%3600/60)); cs.textContent = z(s%60);
+}
+tick(); setInterval(tick, 1000);
+
+/* күнтізбе */
+(function(){
+  const g = document.getElementById("cal"); let h = "";
+  ["Дс","Сс","Ср","Бс","Жм","Сб","Жк"].forEach(d=>h+='<span class="h">'+d+'</span>');
+  const off = (new Date(2026,11,1).getDay()+6)%7;
+  for(let i=0;i<off;i++) h+="<span></span>";
+  for(let d=1; d<=31; d++) h += '<span'+(d===25?' class="x"':'')+'>'+d+'</span>';
+  g.innerHTML = h;
+})();
+
+/* анимация */
+const rv = [...document.querySelectorAll(".reveal")];
+function show(){ const h = innerHeight*0.92; rv.forEach(el=>{ if(!el.classList.contains("on") && el.getBoundingClientRect().top < h) el.classList.add("on"); }); }
+addEventListener("scroll", show, {passive:true}); addEventListener("resize", show); show();
+
+/* жауап */
+document.getElementById("f").addEventListener("submit", e=>{
+  e.preventDefault();
+  const n = document.getElementById("nm").value.trim(), err = document.getElementById("err");
+  if(!n){ err.textContent = "Аты-жөніңізді жазыңыз"; return; }
+  err.textContent = "";
+  const a = document.querySelector('input[name=a]:checked').value;
+  const txt = "Айдана & Ерлан тойы (25.12.2026)\nАты-жөні: "+n+"\nЖауабы: "+a;
+  location.href = "https://wa.me/"+WA+"?text="+encodeURIComponent(txt);
+});
+</script>
+</body>
+</html>
